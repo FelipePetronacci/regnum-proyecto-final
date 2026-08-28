@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="23" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="32">
+ <tileset firstgid="1" name="tileset" tilewidth="16" tileheight="16" tilecount="64" columns="8">
+  <image source="../tileset/tileset.png" width="128" height="128"/>
+ </tileset>
+ <layer id="1" name="Capa de patrones 1" width="23" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxjZmBgYKYhZqIBpoXZnDQ0m5buRjebCwtmwiGOLE8LdxNrthAZ8TQY3D3Y0slgChNOMszGpofSfEmKu4nFQiSqBwAz+gPU
+  </data>
+ </layer>
+ <objectgroup id="3" name="spawnEnemigo"/>
+ <objectgroup id="2" name="colisiones"/>
+</map>
