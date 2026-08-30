@@ -1,6 +1,5 @@
 package com.asd.regnum.jugador;
 
-import com.asd.regnum.Colisionable;
 import com.asd.regnum.proyectiles.*;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -13,7 +12,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Jugador implements Colisionable{
+public class Jugador{
 
     private final int ALTURAJUGADOR = 11;
     private final int ANCHOJUGADOR = 15;

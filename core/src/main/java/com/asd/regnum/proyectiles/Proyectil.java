@@ -1,6 +1,5 @@
 package com.asd.regnum.proyectiles;
 
-import com.asd.regnum.Colisionable;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -8,9 +7,9 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import java.util.List;
-import com.asd.regnum.jugador.Jugador;
+import com.asd.regnum.jugador.*;
 
-public abstract class Proyectil implements Colisionable {
+public abstract class Proyectil{
     private float x;
     private float y;
     private float velocidad = 300f;

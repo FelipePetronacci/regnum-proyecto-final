@@ -80,7 +80,9 @@ public class GameScreen extends ScreenAdapter {
             enemigo.colisionarBala(jugador.getProyectiles());
             enemigo.chequearVida();
             enemigo.dibujar(batch);
+            enemigo.atacarJugador(jugador.getX(), jugador.getY());
         }
+        mapManager.despawnearEnemigos();
         batch.end();
     }
 //openCode

@@ -1,10 +1,9 @@
 package com.asd.regnum.enemies;
 
-import com.asd.regnum.Colisionable;
-import com.asd.regnum.enums.EstadosEnemigo;
-import com.asd.regnum.proyectiles.Proyectil;
-import com.asd.regnum.utilidades.Aleatorio;
-import com.asd.regnum.utilidades.Utilidades;
+import com.asd.regnum.*;
+import com.asd.regnum.enums.*;
+import com.asd.regnum.proyectiles.*;
+import com.asd.regnum.utilidades.*;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -14,7 +13,7 @@ import com.badlogic.gdx.math.Rectangle;
 import java.beans.Introspector;
 import java.util.List;
 
-public abstract class Enemigo implements Colisionable {
+public abstract class Enemigo{
     private int vida;
     private int vidaMaxima;
     private EstadosEnemigo estado;
@@ -26,6 +25,7 @@ public abstract class Enemigo implements Colisionable {
 
 
     public Enemigo(int vida, int dmg, Texture textura, float x, float y, Rectangle hitbox) {
+        this.estado = EstadosEnemigo.PATRULLANDO;
         this.hitbox = hitbox;
         this.vida = vida;
         this.vidaMaxima = vida;
@@ -39,6 +39,8 @@ public abstract class Enemigo implements Colisionable {
 
     }
 
+    public abstract void atacarJugador(float xJugador, float yJugador);
+
     public void colisionarBala(List<Proyectil> proyectiles){
         for(Proyectil proyectil : proyectiles) {
             if (proyectil.getHitbox().overlaps(this.hitbox)){
@@ -51,13 +53,10 @@ public abstract class Enemigo implements Colisionable {
     }
 
     public void chequearVida(){
-        boolean muerto = false;
         this.vida = Utilidades.limitarEstado(this.vida);
-        if(this.vida <= 0 && muerto){
-            muerto = true;
+        if(this.vida <= 0 && this.estado != EstadosEnemigo.MUERTO){
+            estado = EstadosEnemigo.MUERTO;
             System.out.println("Enemigo muerto");
-            this.dispose();
-
         }
     }
 
@@ -73,7 +72,11 @@ public abstract class Enemigo implements Colisionable {
     public float getX() { return x; }
     public float getY() { return y; }
     public Texture getTextura() { return textura; }
+    public EstadosEnemigo getEstado() { return estado; }
+    protected void setEstado(EstadosEnemigo estado) { this.estado = estado; };
+
     protected void setHitbox(Rectangle hitbox) { this.hitbox = hitbox; }
+
 
     public void dispose() {
         textura.dispose();

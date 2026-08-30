@@ -1,6 +1,10 @@
 # Changelog
 
 Todos los cambios notables en este proyecto serán documentados en este archivo.
+## [0.2.3] - 2026-08-30
+### Correcciones
+- **Hitbox enemiga:** se solucionaron problemas de colisiones entre proyectiles y enemigos.
+
 ## [0.2.2] - 2026-08-28
 ### Añadido
 - **Barra de vida enemigo:** Se implementa un indicador de vida a los enemigos.

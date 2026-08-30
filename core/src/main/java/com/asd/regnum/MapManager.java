@@ -1,7 +1,8 @@
 package com.asd.regnum;
 
 import com.asd.regnum.enemies.*;
-import com.asd.regnum.rooms.Room;
+import com.asd.regnum.enums.EstadosEnemigo;
+import com.asd.regnum.rooms.*;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
@@ -11,7 +12,7 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
-import com.asd.regnum.utilidades.Aleatorio;
+import com.asd.regnum.utilidades.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,6 +81,15 @@ public class MapManager {
                 }
             }
         }
+    }
+
+    public void despawnearEnemigos() {
+        for (Enemigo enemigo : enemigos) {
+            if (enemigo.getEstado() == EstadosEnemigo.MUERTO) {
+                enemigo.dispose();
+            }
+        }
+        enemigos.removeIf(enemigo -> enemigo.getEstado() == EstadosEnemigo.MUERTO);
     }
 
     private void spawnearEnemigos() {
