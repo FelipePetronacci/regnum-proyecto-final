@@ -25,7 +25,7 @@ public abstract class Enemigo{
 
 
     public Enemigo(int vida, int dmg, Texture textura, float x, float y, Rectangle hitbox) {
-        this.estado = EstadosEnemigo.PATRULLANDO;
+        this.estado = EstadosEnemigo.PERSIGUIENDO;
         this.hitbox = hitbox;
         this.vida = vida;
         this.vidaMaxima = vida;
@@ -45,9 +45,7 @@ public abstract class Enemigo{
         for(Proyectil proyectil : proyectiles) {
             if (proyectil.getHitbox().overlaps(this.hitbox)){
                 this.vida -= proyectil.getDMG();
-                System.out.println("enemigo golpeado");
-                System.out.println("Daño quitado: " + proyectil.getDMG());
-                System.out.println(this.vida);
+                proyectil.setActivo(false);
             }
         }
     }
@@ -56,7 +54,6 @@ public abstract class Enemigo{
         this.vida = Utilidades.limitarEstado(this.vida);
         if(this.vida <= 0 && this.estado != EstadosEnemigo.MUERTO){
             estado = EstadosEnemigo.MUERTO;
-            System.out.println("Enemigo muerto");
         }
     }
 

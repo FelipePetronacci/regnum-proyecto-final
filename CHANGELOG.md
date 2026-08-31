@@ -1,6 +1,12 @@
 # Changelog
 
 Todos los cambios notables en este proyecto serán documentados en este archivo.
+## [0.2.4] - 2026-08-30
+### Añadido
+- **Menu de inicio:** se creo un menu de inicio con opcion de empezar a jugar y salir del juego
+### Correcciones
+- **Destruccion proyectiles:** Ahora los proyectiles se destruyen al momento de colisionar un enemigo.
+
 ## [0.2.3] - 2026-08-30
 ### Correcciones
 - **Hitbox enemiga:** se solucionaron problemas de colisiones entre proyectiles y enemigos.

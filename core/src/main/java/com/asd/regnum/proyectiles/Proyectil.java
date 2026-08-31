@@ -96,6 +96,10 @@ public abstract class Proyectil{
         return activo;
     }
 
+    public void setActivo(boolean activo) {
+        this.activo = activo;
+    }
+
     public float getY() {
         return y;
     }
