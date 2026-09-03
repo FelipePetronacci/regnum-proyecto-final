@@ -1,7 +1,9 @@
 package com.asd.regnum;
 
-import com.asd.regnum.enemies.*;
-import com.asd.regnum.jugador.Jugador;
+import com.asd.regnum.enums.EnumMusica;
+import com.asd.regnum.gestores.GestorDeMusica;
+import com.asd.regnum.gestores.GestorDeSonidos;
+import com.asd.regnum.hud.Hud;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
@@ -16,10 +18,14 @@ public class GameScreen extends ScreenAdapter {
     private OrthographicCamera camera;
     private FitViewport viewport;
     private SpriteBatch batch;
-    private Jugador jugador;
-    private MapManager mapManager;
     private BitmapFont fuente;
     private FreeTypeFontGenerator generator;
+
+    private GestorDeMusica gestorDeMusica;
+    private GestorDeSonidos gestorDeSonidos;
+    private Hud hud;
+
+    private Mundo mundo; // Nuestra clase de lógica
 
     private final float VIRTUAL_WIDTH = 320f;
     private final float VIRTUAL_HEIGHT = 240f;
@@ -36,66 +42,66 @@ public class GameScreen extends ScreenAdapter {
         generator.dispose();
 
         batch = new SpriteBatch();
-        jugador = new Jugador();
-        mapManager = new MapManager();
+        gestorDeMusica = new GestorDeMusica();
+        gestorDeSonidos = new GestorDeSonidos();
 
-        int colCentro = 1;
-        int filaCentro = 1;
+        mundo = new Mundo(gestorDeSonidos);
 
-        float roomWidth = 23 * 16f;
-        float roomHeight = 15 * 16f;
-        float habX = colCentro * roomWidth;
-        float habY = filaCentro * roomHeight;
-
-        float spawnX = habX + (roomWidth / 2f);
-        float spawnY = habY + (roomHeight / 2f);
-
-        jugador.setX(spawnX);
-        jugador.setY(spawnY);
+        hud = new Hud(batch);
+        gestorDeMusica.reproducirMusica(EnumMusica.DISTANT);
     }
 
     @Override
     public void render(float delta) {
         float dt = Gdx.graphics.getDeltaTime();
+
+        mundo.actualizar(dt, viewport);
+
+        // 2. ACTUALIZAR CÁMARA Y HUD
         camera.position.set(
-            jugador.getX() + 17f / 2f,
-            jugador.getY() + 11f / 2f,
+            mundo.getJugador().getX() + 17f / 2f,
+            mundo.getJugador().getY() + 11f / 2f,
             0
         );
         camera.update();
+        hud.update(mundo.getJugador().getX(), mundo.getJugador().getY(), mundo.getMapManager().getEnemigos().size());
+        hud.updateHealth(mundo.getJugador().getVida());
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         viewport.apply();
-        mapManager.dibujarMapa(camera);
+        mundo.getMapManager().dibujarMapa(camera);
+
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
-        jugador.moverJugador(batch, mapManager.getParedes(), dt);
-        jugador.controlarDisparios(viewport, mapManager.getParedes(), dt);
-        jugador.dibujarProyectil(batch);
-        jugador.dibujarEfectos(batch);
-        for (Enemigo enemigo : mapManager.getEnemigos()) {
+
+        mundo.getJugador().dibujar(batch);
+        mundo.getJugador().dibujarProyectil(batch);
+        mundo.getJugador().dibujarEfectos(batch);
+
+        for (var enemigo : mundo.getMapManager().getEnemigos()) {
             enemigo.dibujarVida(batch, fuente);
-            enemigo.colisionarBala(jugador.getProyectiles());
-            enemigo.chequearVida();
             enemigo.dibujar(batch);
-            enemigo.atacarJugador(jugador.getX(), jugador.getY());
         }
-        mapManager.despawnearEnemigos();
         batch.end();
+
+        hud.render();
     }
-//openCode
+
     @Override
     public void resize(int width, int height) {
+        hud.resize(width, height);
         viewport.update(width, height, true);
     }
 
     @Override
     public void dispose() {
-        mapManager.dispose();
         batch.dispose();
-        jugador.dispose();
         fuente.dispose();
+        gestorDeMusica.dispose();
+        gestorDeSonidos.dispose();
+        hud.dispose();
+        mundo.dispose();
     }
 }

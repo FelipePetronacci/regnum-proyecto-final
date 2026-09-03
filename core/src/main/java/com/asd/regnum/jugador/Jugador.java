@@ -1,5 +1,7 @@
 package com.asd.regnum.jugador;
 
+import com.asd.regnum.enums.EnumSonidos;
+import com.asd.regnum.gestores.GestorDeSonidos;
 import com.asd.regnum.proyectiles.*;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -19,7 +21,8 @@ public class Jugador{
 
     private float x = 170;
     private float y = 75;
-    private int vida = 100;
+    private int vida = 3;
+    private int vidaMaxima = 3;
     private float velocidad = 75f;
     private Texture textura = new Texture("player/player.png");
     private Rectangle hitbox = new Rectangle(x, y, ANCHOJUGADOR, ALTURAJUGADOR);
@@ -27,8 +30,13 @@ public class Jugador{
     private List<Proyectil> proyectiles = new ArrayList<>();
     private List<ParticleEffect> efectosParticulas = new ArrayList<>();
 
-    public void moverJugador(SpriteBatch batch, List<Rectangle> paredes, float dt){
+    // 1. Método exclusivo para la lógica (Se llama desde el Mundo)
+    public void actualizarMovimiento(List<Rectangle> paredes, float dt){
         controlarMovimiento(paredes, dt);
+    }
+
+    // 2. Método exclusivo para pintar gráficos (Se llama desde la GameScreen)
+    public void dibujar(SpriteBatch batch){
         batch.draw(textura, x, y, ANCHOJUGADOR, ALTURAJUGADOR);
     }
 
@@ -96,9 +104,10 @@ public class Jugador{
         }
     }
 
-    public void controlarDisparios(FitViewport viewport, List<Rectangle> paredes, float dt) {
+    public void controlarDisparios(FitViewport viewport, List<Rectangle> paredes, float dt, GestorDeSonidos gestorDeSonidos) {
         if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)){
             proyectiles.add(new ProyectilComun(this, viewport));
+            gestorDeSonidos.reproducir(EnumSonidos.DISPARO);
         }
 
         for (int i = proyectiles.size() - 1; i >= 0; i--) {
@@ -126,6 +135,7 @@ public class Jugador{
     public int getALTURAJUGADOR() { return ALTURAJUGADOR; }
     public int getANCHOJUGADOR() { return ANCHOJUGADOR; }
     public List<Proyectil> getProyectiles() { return proyectiles; }
+    public int getVida() { return vida; }
 
     public void dispose() {
         textura.dispose();

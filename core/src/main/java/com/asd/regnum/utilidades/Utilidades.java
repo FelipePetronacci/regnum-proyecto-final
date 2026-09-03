@@ -6,4 +6,12 @@ public class Utilidades {
         if(cantidad < 0) { return 0;}
         return cantidad;
     }
+
+    public static int limitarEstado(int cantidad, int max){
+        if(cantidad > max) { return max;}
+        if(cantidad < 0) { return 0;}
+        return cantidad;
+    }
+
+
 }

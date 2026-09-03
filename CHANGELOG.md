@@ -1,6 +1,18 @@
 # Changelog
 
 Todos los cambios notables en este proyecto serán documentados en este archivo.
+## [0.3.0] - 2026-09-02
+### Añadido
+* **Sistema de Gestión de Audio:** Implementación de `enums` para organizar las rutas de los archivos de audio (tanto efectos de sonido como música) mediante `Gdx.files.internal`, junto a un gestor centralizado para su control global.
+* **HUD de Salud Triangular**: Implementada la interfaz de usuario en la esquina superior izquierda con un diseño piramidal (2 corazones arriba, 1 centrado abajo).
+* **Diseño Visual de Corazones**: Integración de corazones llenos (`♥`) y vacíos (`♡`) en tono bordo (`#8B0000`) con corchetes blancos (`[]`).
+* **Menú de Depuración (F3)**: Añadida la opción de alternar un panel de información en tiempo real al presionar la tecla **F3**, mostrando los FPS actuales y las coordenadas (`X`, `Y`) del jugador.
+
+### Modificado
+* **Arquitectura del Mundo (MVC):** Creación de la clase `Mundo` para separar por completo la lógica del juego (colisiones, IA y físicas) del renderizado gráfico en `GameScreen`.
+* **Refactorización del Jugador:** Separación de responsabilidades en `Jugador`, aislando el cálculo de movimiento (`actualizarMovimiento`) del dibujo en pantalla (`dibujar`).
+* **Soporte de Caracteres en Fuentes**: Actualización de los parámetros de `FreeTypeFontGenerator` para incluir los caracteres especiales de los corazones en `consola.ttf`.
+
 ## [0.2.4] - 2026-08-30
 ### Añadido
 - **Menu de inicio:** se creo un menu de inicio con opcion de empezar a jugar y salir del juego

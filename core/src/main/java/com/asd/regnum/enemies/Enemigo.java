@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
 
 import java.beans.Introspector;
 import java.util.List;
@@ -17,22 +18,24 @@ public abstract class Enemigo{
     private int vida;
     private int vidaMaxima;
     private EstadosEnemigo estado;
-    private int dmg;
     private Texture textura;
     private float x;
     private float y;
     private Rectangle hitbox;
 
 
-    public Enemigo(int vida, int dmg, Texture textura, float x, float y, Rectangle hitbox) {
+    public Enemigo(int vida, Texture textura, float x, float y, Rectangle hitbox) {
         this.estado = EstadosEnemigo.PERSIGUIENDO;
         this.hitbox = hitbox;
         this.vida = vida;
         this.vidaMaxima = vida;
-        this.dmg = dmg;
         this.textura = textura;
         this.x = x;
         this.y = y;
+    }
+
+    public void update(float delta, float xJugador, float yJugador, List<Rectangle> collisionRects){
+
     }
 
     public void dibujarHitbox(){
@@ -51,10 +54,15 @@ public abstract class Enemigo{
     }
 
     public void chequearVida(){
-        this.vida = Utilidades.limitarEstado(this.vida);
+        this.vida = Utilidades.limitarEstado(this.vida, this.vidaMaxima);
         if(this.vida <= 0 && this.estado != EstadosEnemigo.MUERTO){
             estado = EstadosEnemigo.MUERTO;
         }
+    }
+
+    public void setPosition(float x, float y){
+        this.x = x;
+        this.y = y;
     }
 
 
