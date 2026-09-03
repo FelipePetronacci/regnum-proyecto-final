@@ -4,6 +4,7 @@ import com.asd.regnum.enums.EnumMusica;
 import com.asd.regnum.gestores.GestorDeMusica;
 import com.asd.regnum.gestores.GestorDeSonidos;
 import com.asd.regnum.hud.Hud;
+import com.asd.regnum.items.Item;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
@@ -79,6 +80,9 @@ public class GameScreen extends ScreenAdapter {
         mundo.getJugador().dibujar(batch);
         mundo.getJugador().dibujarProyectil(batch);
         mundo.getJugador().dibujarEfectos(batch);
+        for(Item item : mundo.getMapManager().getItems()){
+            item.dibujar(batch);
+        }
 
         for (var enemigo : mundo.getMapManager().getEnemigos()) {
             enemigo.dibujarVida(batch, fuente);

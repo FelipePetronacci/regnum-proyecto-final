@@ -2,6 +2,7 @@ package com.asd.regnum;
 
 import com.asd.regnum.enemies.*;
 import com.asd.regnum.enums.EstadosEnemigo;
+import com.asd.regnum.items.*;
 import com.asd.regnum.rooms.*;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.MapLayer;
@@ -24,6 +25,7 @@ public class MapManager {
     private List<TiledMap> listaDeMapas;
     private List<Rectangle> paredes;
     private List<Enemigo> enemigos;
+    private List<Item> items;
     private int[][] matrizMapa;
 
     private final int ROOM_WIDTH = 23 * 16;
@@ -83,6 +85,10 @@ public class MapManager {
         }
     }
 
+    public void borrarItem(int i){
+        items.remove(i);
+    }
+
     public void despawnearEnemigos() {
         for (Enemigo enemigo : enemigos) {
             if (enemigo.getEstado() == EstadosEnemigo.MUERTO) {
@@ -94,6 +100,7 @@ public class MapManager {
 
     private void spawnearEnemigos() {
         enemigos = new ArrayList<>();
+        items = new ArrayList<>();
 
         for (int fila = 0; fila < matrizMapa.length; fila++) {
             for (int col = 0; col < matrizMapa[fila].length; col++) {
@@ -113,9 +120,13 @@ public class MapManager {
                                     Rectangle rectOriginal = ((RectangleMapObject) object).getRectangle();
                                     float xGlobal = rectOriginal.x + offsetX;
                                     float yGlobal = rectOriginal.y + offsetY;
-
-                                    Enemigo enemigo = new Spider(xGlobal, yGlobal);
-                                    enemigos.add(enemigo);
+                                    if(Aleatorio.generarAleatorio(1, 2) == 2) {
+                                        Enemigo enemigo = new Spider(xGlobal, yGlobal);
+                                        enemigos.add(enemigo);
+                                    }else if(Aleatorio.generarAleatorio(1, 2) == 2){
+                                        Item item = new Corazon(xGlobal, yGlobal);
+                                        items.add(item);
+                                    }
                                 }
                             }
                         }
@@ -161,8 +172,12 @@ public class MapManager {
         return paredes;
     }
     public List<Enemigo> getEnemigos() { return enemigos; }
-
-
+    public Item getItem(int index) {
+        return items.get(index);
+    }
+    public List<Item> getItems() {
+        return items;
+    }
 
     public void dispose() {
         for (TiledMap map : listaDeMapas) {
@@ -171,6 +186,9 @@ public class MapManager {
         mapRenderer.dispose();
         for (Enemigo enemigo : enemigos){
             enemigo.dispose();
+        }
+        for (Item item : items){
+            item.dispose();
         }
     }
 }

@@ -78,8 +78,9 @@ public abstract class Enemigo{
     public float getY() { return y; }
     public Texture getTextura() { return textura; }
     public EstadosEnemigo getEstado() { return estado; }
-    protected void setEstado(EstadosEnemigo estado) { this.estado = estado; };
+    public Rectangle getHitbox() { return hitbox; }
 
+    protected void setEstado(EstadosEnemigo estado) { this.estado = estado; };
     protected void setHitbox(Rectangle hitbox) { this.hitbox = hitbox; }
 
 

@@ -2,6 +2,7 @@ package com.asd.regnum;
 
 import com.asd.regnum.enemies.Enemigo;
 import com.asd.regnum.gestores.GestorDeSonidos;
+import com.asd.regnum.items.Item;
 import com.asd.regnum.jugador.Jugador;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -11,6 +12,8 @@ public class Mundo {
     private Jugador jugador;
     private MapManager mapManager;
     private GestorDeSonidos gestorDeSonidos;
+    private float cooldownRecibirDmg = 0.0f;
+
 
     public Mundo(GestorDeSonidos gestorDeSonidos) {
         this.gestorDeSonidos = gestorDeSonidos;
@@ -41,7 +44,11 @@ public class Mundo {
 
         jugador.actualizarMovimiento(mapManager.getParedes(), dt);
         jugador.controlarDisparios(viewport, mapManager.getParedes(), dt, gestorDeSonidos);
-
+        gestionarColisionJugadorEnemigo(dt);
+        gestionarColisionJugadorItem();
+        for(Item item : mapManager.getItems()){
+            item.moverItem(dt);
+        }
         for (Enemigo enemigo : mapManager.getEnemigos()) {
             enemigo.colisionarBala(jugador.getProyectiles());
             enemigo.chequearVida();
@@ -60,8 +67,30 @@ public class Mundo {
         return mapManager;
     }
 
+    public void gestionarColisionJugadorItem(){
+        for (int i = mapManager.getItems().size() - 1; i >= 0; i--) {
+            Item item = mapManager.getItem(i);
+            if (jugador.getHitbox().overlaps(item.getHitbox())) {
+                mapManager.borrarItem(i);
+                item.dispose();
+                jugador.curarJugador();
+            }
+        }
+    }
+
+    public void gestionarColisionJugadorEnemigo(float dt){
+        for(Enemigo enemigo : mapManager.getEnemigos()){
+            if(jugador.getHitbox().overlaps(enemigo.getHitbox()) && cooldownRecibirDmg <= 0.0f){
+                jugador.recibirDmg();
+                cooldownRecibirDmg = 35.0f;
+            } else {
+                cooldownRecibirDmg -= dt;
+            }
+        }
+    }
+
     public void dispose() {
-        if (jugador != null) jugador.dispose();
-        if (mapManager != null) mapManager.dispose();
+        jugador.dispose();
+        mapManager.dispose();
     }
 }

@@ -3,6 +3,7 @@ package com.asd.regnum.jugador;
 import com.asd.regnum.enums.EnumSonidos;
 import com.asd.regnum.gestores.GestorDeSonidos;
 import com.asd.regnum.proyectiles.*;
+import com.asd.regnum.utilidades.Utilidades;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
@@ -30,12 +31,12 @@ public class Jugador{
     private List<Proyectil> proyectiles = new ArrayList<>();
     private List<ParticleEffect> efectosParticulas = new ArrayList<>();
 
-    // 1. Método exclusivo para la lógica (Se llama desde el Mundo)
+
     public void actualizarMovimiento(List<Rectangle> paredes, float dt){
         controlarMovimiento(paredes, dt);
     }
 
-    // 2. Método exclusivo para pintar gráficos (Se llama desde la GameScreen)
+
     public void dibujar(SpriteBatch batch){
         batch.draw(textura, x, y, ANCHOJUGADOR, ALTURAJUGADOR);
     }
@@ -128,6 +129,15 @@ public class Jugador{
         }
     }
 
+    public void curarJugador(){
+        this.vida += 1;
+        this.vida = Utilidades.limitarEstado(3, 3);
+    }
+
+    public void recibirDmg(){
+        this.vida--;
+    }
+
     public void setX(float x) { this.x = x; }
     public void setY(float y) { this.y = y; }
     public float getX() { return x; }
@@ -136,6 +146,7 @@ public class Jugador{
     public int getANCHOJUGADOR() { return ANCHOJUGADOR; }
     public List<Proyectil> getProyectiles() { return proyectiles; }
     public int getVida() { return vida; }
+    public Rectangle getHitbox() { return hitbox; }
 
     public void dispose() {
         textura.dispose();

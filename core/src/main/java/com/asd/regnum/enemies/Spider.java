@@ -22,12 +22,12 @@ public class Spider extends Enemigo {
 
     private static Rectangle getHitbox(float x, float y) {
         final float TILE_SIZE = 16f;
-        float drawWidth = (38 - (38 / 18f)) / 2f;
-        float drawHeight = (35 - (35 / 18f)) / 2f;
-        float celdaCentroX = x + (TILE_SIZE / 2f);
-        float celdaCentroY = y + (TILE_SIZE / 2f);
-        float drawX = celdaCentroX - (drawWidth / 2f);
-        float drawY = celdaCentroY - (drawHeight / 2f);
+        float drawWidth = (38 - (38 / 18f)) / 2.5f;
+        float drawHeight = (35 - (35 / 18f)) / 2.5f;
+        float celdaCentroX = x + (TILE_SIZE / 2.5f);
+        float celdaCentroY = y + (TILE_SIZE / 2.5f);
+        float drawX = celdaCentroX - (drawWidth / 2.5f);
+        float drawY = celdaCentroY - (drawHeight / 2.5f);
         return new Rectangle(drawX, drawY, drawWidth, drawHeight);
     }
 

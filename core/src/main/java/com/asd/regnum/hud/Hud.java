@@ -21,11 +21,11 @@ public class Hud implements Disposable {
     private BitmapFont font;
 
     private Table heartTable;
-    private Table debugTable; // Tabla para el menú de debug
-    private Label debugLabel; // Texto con la info de debug
+    private Table debugTable;
+    private Label debugLabel;
 
-    private boolean showDebug = false; // Estado para alternar con F3
-    private boolean f3WasPressed = debounceF3(); // Control anti-rebote básico
+    private boolean showDebug = false;
+    private boolean f3WasPressed = debounceF3();
 
     private final Color COLOR_BORDO = new Color(0.55f, 0.0f, 0.0f, 1f);
 

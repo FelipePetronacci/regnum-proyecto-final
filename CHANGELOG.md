@@ -1,6 +1,11 @@
 # Changelog
 
 Todos los cambios notables en este proyecto serán documentados en este archivo.
+## [0.3.1] - 2026-09-03
+### Añadido
+* **Daño al jugador:** Ahora el jugador es capaz de sufrir daño al colisionar con un enemigo, restandole vida.
+* **Curacion del jugador:** Se implemento un item de corazon el cual le regenera 1 punto de vida al jugador.
+
 ## [0.3.0] - 2026-09-02
 ### Añadido
 * **Sistema de Gestión de Audio:** Implementación de `enums` para organizar las rutas de los archivos de audio (tanto efectos de sonido como música) mediante `Gdx.files.internal`, junto a un gestor centralizado para su control global.
