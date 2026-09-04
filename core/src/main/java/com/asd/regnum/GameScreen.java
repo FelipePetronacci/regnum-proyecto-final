@@ -5,6 +5,7 @@ import com.asd.regnum.gestores.GestorDeMusica;
 import com.asd.regnum.gestores.GestorDeSonidos;
 import com.asd.regnum.hud.Hud;
 import com.asd.regnum.items.Item;
+import com.asd.regnum.menu.PantallaMuerte;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
@@ -16,6 +17,11 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class GameScreen extends ScreenAdapter {
 
+
+    private Main game;
+    public GameScreen(Main game) {
+        this.game = game;
+    }
     private OrthographicCamera camera;
     private FitViewport viewport;
     private SpriteBatch batch;
@@ -26,7 +32,7 @@ public class GameScreen extends ScreenAdapter {
     private GestorDeSonidos gestorDeSonidos;
     private Hud hud;
 
-    private Mundo mundo; // Nuestra clase de lógica
+    private Mundo mundo;
 
     private final float VIRTUAL_WIDTH = 320f;
     private final float VIRTUAL_HEIGHT = 240f;
@@ -54,11 +60,15 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
+        if (mundo.getJugador().getVida() <= 0) {
+            game.setScreen(new PantallaMuerte(game));
+            return;
+        }
         float dt = Gdx.graphics.getDeltaTime();
 
         mundo.actualizar(dt, viewport);
 
-        // 2. ACTUALIZAR CÁMARA Y HUD
+
         camera.position.set(
             mundo.getJugador().getX() + 17f / 2f,
             mundo.getJugador().getY() + 11f / 2f,
@@ -76,7 +86,7 @@ public class GameScreen extends ScreenAdapter {
 
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
-
+        mundo.dibujarParticulas(batch);
         mundo.getJugador().dibujar(batch);
         mundo.getJugador().dibujarProyectil(batch);
         mundo.getJugador().dibujarEfectos(batch);

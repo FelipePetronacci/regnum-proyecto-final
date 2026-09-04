@@ -27,7 +27,6 @@ public class Jugador{
     private float velocidad = 75f;
     private Texture textura = new Texture("player/player.png");
     private Rectangle hitbox = new Rectangle(x, y, ANCHOJUGADOR, ALTURAJUGADOR);
-
     private List<Proyectil> proyectiles = new ArrayList<>();
     private List<ParticleEffect> efectosParticulas = new ArrayList<>();
 
@@ -131,7 +130,7 @@ public class Jugador{
 
     public void curarJugador(){
         this.vida += 1;
-        this.vida = Utilidades.limitarEstado(3, 3);
+        this.vida = Utilidades.limitarEstado(this.vida, 3);
     }
 
     public void recibirDmg(){

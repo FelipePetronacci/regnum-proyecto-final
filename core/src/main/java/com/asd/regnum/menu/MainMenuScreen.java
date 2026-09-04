@@ -6,7 +6,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
@@ -16,7 +15,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
@@ -27,8 +25,6 @@ public class MainMenuScreen implements Screen {
 
     Texture backgroundTexture;
     Image backgroundImage;
-    Texture buttonTexture;
-    Texture buttonPressedTexture;
     BitmapFont font;
     FreeTypeFontGenerator generator;
 
@@ -53,14 +49,11 @@ public class MainMenuScreen implements Screen {
         font = generator.generateFont(parameter);
         generator.dispose();
 
-        buttonTexture = createBorderedTexture(180, 45, Color.BLACK, Color.WHITE);
-        buttonPressedTexture = createBorderedTexture(180, 45, Color.DARK_GRAY, Color.LIGHT_GRAY);
 
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
         textButtonStyle.font = font;
-        textButtonStyle.up = new TextureRegionDrawable(buttonTexture);
-        textButtonStyle.down = new TextureRegionDrawable(buttonPressedTexture);
         textButtonStyle.fontColor = Color.WHITE;
+        textButtonStyle.overFontColor = Color.YELLOW;
 
         Table table = new Table();
         table.setFillParent(true);
@@ -90,20 +83,8 @@ public class MainMenuScreen implements Screen {
             }
         });
 
-        table.add(playButton).size(180, 45).padBottom(15).row();
-        table.add(exitButton).size(180, 45);
-    }
-
-    private Texture createBorderedTexture(int width, int height, Color bgColor, Color borderColor) {
-        Pixmap pixmap = new Pixmap(width, height, Pixmap.Format.RGBA8888);
-        pixmap.setColor(bgColor);
-        pixmap.fill();
-        pixmap.setColor(borderColor);
-        pixmap.drawRectangle(0, 0, width, height);
-        pixmap.drawRectangle(1, 1, width - 2, height - 2);
-        Texture texture = new Texture(pixmap);
-        pixmap.dispose();
-        return texture;
+        table.add(playButton).padBottom(15).row();
+        table.add(exitButton);
     }
 
     @Override
@@ -119,7 +100,6 @@ public class MainMenuScreen implements Screen {
             float targetZoom = 1.0f - (0.5f * progress);
             ((OrthographicCamera) stage.getCamera()).zoom = targetZoom;
 
-
             float targetX = 350 + (150 * progress);
             float targetY = 150 + (50 * progress);
             stage.getCamera().position.set(targetX, targetY, 0);
@@ -127,7 +107,7 @@ public class MainMenuScreen implements Screen {
             stage.getCamera().update();
 
             if (zoomTimer >= transitionDuration) {
-                game.setScreen(new GameScreen());
+                game.setScreen(new GameScreen(game));
                 dispose();
                 return;
             }
@@ -151,8 +131,6 @@ public class MainMenuScreen implements Screen {
     public void dispose() {
         stage.dispose();
         font.dispose();
-        buttonTexture.dispose();
-        buttonPressedTexture.dispose();
         backgroundTexture.dispose();
     }
 }

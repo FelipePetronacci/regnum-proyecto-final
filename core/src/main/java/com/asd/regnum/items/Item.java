@@ -20,7 +20,7 @@ public class Item {
         this.texture = texture;
         this.x = x;
         this.y = y;
-        this.hitbox = new Rectangle(x, y, x + this.texture.getWidth(), y + this.texture.getHeight());
+        this.hitbox = new Rectangle(x, y, this.texture.getWidth(), this.texture.getHeight());
     }
 
     public void dibujar(SpriteBatch batch){
@@ -36,6 +36,14 @@ public class Item {
 
     public Rectangle getHitbox() {
         return hitbox;
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
     }
 
     public void dispose(){
