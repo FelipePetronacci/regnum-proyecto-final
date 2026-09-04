@@ -53,5 +53,8 @@ gradlew.bat lwjgl3:run
 ## Estado Actual del Proyecto
 * **Fase:** Desarrollo del proyecto.
 
+## Enlace de video de muestra:
+[Ver el video aca](https://www.youtube.com/watch?v=68IC5CL-u_o)
+
 ## Enlace de la wiki
 [Ver la Propuesta Completa del Proyecto aquí](https://github.com/FelipePetronacci/regnum-proyecto-final/wiki/Propuesta-del-Proyecto-%E2%80%90-Regnum)
