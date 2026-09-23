@@ -1,5 +1,6 @@
 package com.asd.regnum;
 
+import com.asd.regnum.enemies.Enemigo;
 import com.asd.regnum.enums.EnumMusica;
 import com.asd.regnum.gestores.GestorDeMusica;
 import com.asd.regnum.gestores.GestorDeSonidos;
@@ -94,7 +95,7 @@ public class GameScreen extends ScreenAdapter {
             item.dibujar(batch);
         }
 
-        for (var enemigo : mundo.getMapManager().getEnemigos()) {
+        for (Enemigo enemigo : mundo.getMapManager().getEnemigos()) {
             enemigo.dibujarVida(batch, fuente);
             enemigo.dibujar(batch);
         }

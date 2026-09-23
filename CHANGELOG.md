@@ -1,6 +1,11 @@
 # Changelog
 
 Todos los cambios notables en este proyecto serán documentados en este archivo.
+## [0.4.0] - 2026-09-23
+### Añadido
+* **Enemigo nuevo:** Se añadio un enemigo nuevo "Murcielago"
+* **Power Up:** Se añadio un power up que mejora el daño del jugador 
+
 ## [0.3.2] - 2026-09-03
 ### Añadido
 * **Pantalla de muerte:** Se implemento una pantalla de muerte

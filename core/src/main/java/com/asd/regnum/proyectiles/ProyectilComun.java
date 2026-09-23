@@ -5,7 +5,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class ProyectilComun extends Proyectil{
 
-    public ProyectilComun(Jugador jugador, FitViewport viewport) {
-        super(jugador, viewport, 40);
+    public ProyectilComun(Jugador jugador, FitViewport viewport, int dmg) {
+        super(jugador, viewport, dmg);
     }
 }

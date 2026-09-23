@@ -5,7 +5,7 @@
  </tileset>
  <layer id="1" name="Capa de patrones 1" width="23" height="15">
   <data encoding="base64" compression="zlib">
-   eJzjYmBgYMSCmdEwFxALQWli1MP0MNEAw9xArHpOGppNDXcLQjE6XxCPHClmk+JGbOoFaWy2EJa4EkTjE4pbbOph6ZVW7h4IsylNJ7jMpgbGlU4IxR0xmB75ErncgtEwjBzGQkh+xYa50DAACfkF+w==
+   eJzFlFELwCAIhG/b03zz///ZPWxCyFXGdAs+QrLjSksAbITDIbiHBPNtz16AeYjmn4XaGb71wcc6WFvRXvHI8rVYG6RW6uJZbVk+wHswy/cf2m/7pKedQa9PZrWL8MW7bP8tm432jtGclSGOC0dKBbM=
   </data>
  </layer>
  <objectgroup id="3" name="spawnEnemigo">

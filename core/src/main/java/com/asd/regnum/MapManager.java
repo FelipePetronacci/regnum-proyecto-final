@@ -35,7 +35,7 @@ public class MapManager {
         mapLoader = new TmxMapLoader();
         listaDeMapas = new ArrayList<>();
 
-        Room room1 = new Room("rooms/hab1.tmx", true, true, true, true);
+
 
 
         listaDeMapas.add(mapLoader.load("rooms/hab1.tmx"));
@@ -44,15 +44,29 @@ public class MapManager {
 
         int cantidadMapas = listaDeMapas.size();
 
+        
         matrizMapa = new int[][]{
             {Aleatorio.generarAleatorio(1, cantidadMapas), Aleatorio.generarAleatorio(1, cantidadMapas), Aleatorio.generarAleatorio(1, cantidadMapas)},
             {Aleatorio.generarAleatorio(1, cantidadMapas), Aleatorio.generarAleatorio(1, cantidadMapas), Aleatorio.generarAleatorio(1, cantidadMapas)},
             {Aleatorio.generarAleatorio(1, cantidadMapas), Aleatorio.generarAleatorio(1, cantidadMapas), Aleatorio.generarAleatorio(1, cantidadMapas)}
         };
 
+        /*
+        matrizMapa = new int[][]{
+            {0,0,0},
+            {0,0,0},
+            {0,0,0}
+        };
+        */
         mapRenderer = new OrthogonalTiledMapRenderer(listaDeMapas.get(0));
         cargarParedesGlobales();
         spawnearEnemigos();
+    }
+
+    public void armarMapa(int [][] matrizMapa, List<TiledMap> listaDeMapas){
+        for(int i = 0; i < matrizMapa.length; i++){
+
+        }
     }
 
     public void dibujarMapa(OrthographicCamera camera) {
@@ -121,10 +135,21 @@ public class MapManager {
                                     float xGlobal = rectOriginal.x + offsetX;
                                     float yGlobal = rectOriginal.y + offsetY;
                                     if(Aleatorio.generarAleatorio(1, 2) == 2) {
-                                        Enemigo enemigo = new Spider(xGlobal, yGlobal);
-                                        enemigos.add(enemigo);
+                                        int num = Aleatorio.generarAleatorio(1, 100);
+                                        if(num < 15) {
+                                            Enemigo enemigo = new Bat(xGlobal, yGlobal);
+                                            enemigos.add(enemigo);
+                                        }else if(num < 100) {
+                                            Enemigo enemigo = new Spider(xGlobal, yGlobal);
+                                            enemigos.add(enemigo);
+                                        }
                                     }else if(Aleatorio.generarAleatorio(1, 2) == 2){
-                                        Item item = new Corazon(xGlobal, yGlobal);
+                                        Item item;
+                                        if(Aleatorio.generarAleatorio(1, 2) == 1){
+                                            item = new Corazon(xGlobal, yGlobal);
+                                        } else {
+                                            item = new PowerUpDmg(xGlobal, yGlobal);
+                                        }
                                         items.add(item);
                                     }
                                 }

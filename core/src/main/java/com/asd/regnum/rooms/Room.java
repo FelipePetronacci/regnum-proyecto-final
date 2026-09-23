@@ -16,6 +16,8 @@ public  class Room {
         this.puertaOeste = puertaOeste;
     }
 
-
+    public String getRuta(){
+        return this.direccion;
+    }
 
 }

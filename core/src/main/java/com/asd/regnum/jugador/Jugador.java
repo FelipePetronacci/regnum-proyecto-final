@@ -3,6 +3,7 @@ package com.asd.regnum.jugador;
 import com.asd.regnum.enums.EnumSonidos;
 import com.asd.regnum.gestores.GestorDeSonidos;
 import com.asd.regnum.proyectiles.*;
+import com.asd.regnum.utilidades.Aleatorio;
 import com.asd.regnum.utilidades.Utilidades;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -20,6 +21,8 @@ public class Jugador{
     private final int ALTURAJUGADOR = 11;
     private final int ANCHOJUGADOR = 15;
 
+
+    private int dmg = 40;
     private float x = 170;
     private float y = 75;
     private int vida = 3;
@@ -106,7 +109,7 @@ public class Jugador{
 
     public void controlarDisparios(FitViewport viewport, List<Rectangle> paredes, float dt, GestorDeSonidos gestorDeSonidos) {
         if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)){
-            proyectiles.add(new ProyectilComun(this, viewport));
+            proyectiles.add(new ProyectilComun(this, viewport, this.dmg));
             gestorDeSonidos.reproducir(EnumSonidos.DISPARO);
         }
 
@@ -126,6 +129,10 @@ public class Jugador{
                 proyectiles.remove(i);
             }
         }
+    }
+
+    public void aumentarDmg() {
+        this.dmg += Aleatorio.generarAleatorio(19);
     }
 
     public void curarJugador(){
