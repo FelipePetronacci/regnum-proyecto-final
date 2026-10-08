@@ -4,6 +4,7 @@ import com.asd.regnum.enemies.*;
 import com.asd.regnum.enums.EstadosEnemigo;
 import com.asd.regnum.items.*;
 import com.asd.regnum.rooms.*;
+import com.asd.regnum.utilidades.*;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
@@ -13,10 +14,12 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
-import com.asd.regnum.utilidades.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MapManager {
 
@@ -27,46 +30,108 @@ public class MapManager {
     private List<Enemigo> enemigos;
     private List<Item> items;
     private int[][] matrizMapa;
+    private Room[][] grillaRooms;
 
+    private final int FILAS = 3;
+    private final int COLUMNAS = 3;
     private final int ROOM_WIDTH = 23 * 16;
     private final int ROOM_HEIGHT = 15 * 16;
+
+
+
 
     public MapManager() {
         mapLoader = new TmxMapLoader();
         listaDeMapas = new ArrayList<>();
+        matrizMapa = new int[FILAS][COLUMNAS];
+        grillaRooms = new Room[FILAS][COLUMNAS];
 
+        armarMapa();
 
-
-
-        listaDeMapas.add(mapLoader.load("rooms/hab1.tmx"));
-        listaDeMapas.add(mapLoader.load("rooms/hab2.tmx"));
-        listaDeMapas.add(mapLoader.load("rooms/hab3.tmx"));
-
-        int cantidadMapas = listaDeMapas.size();
-
-        
-        matrizMapa = new int[][]{
-            {Aleatorio.generarAleatorio(1, cantidadMapas), Aleatorio.generarAleatorio(1, cantidadMapas), Aleatorio.generarAleatorio(1, cantidadMapas)},
-            {Aleatorio.generarAleatorio(1, cantidadMapas), Aleatorio.generarAleatorio(1, cantidadMapas), Aleatorio.generarAleatorio(1, cantidadMapas)},
-            {Aleatorio.generarAleatorio(1, cantidadMapas), Aleatorio.generarAleatorio(1, cantidadMapas), Aleatorio.generarAleatorio(1, cantidadMapas)}
-        };
-
-        /*
-        matrizMapa = new int[][]{
-            {0,0,0},
-            {0,0,0},
-            {0,0,0}
-        };
-        */
         mapRenderer = new OrthogonalTiledMapRenderer(listaDeMapas.get(0));
+
         cargarParedesGlobales();
         spawnearEnemigos();
     }
 
-    public void armarMapa(int [][] matrizMapa, List<TiledMap> listaDeMapas){
-        for(int i = 0; i < matrizMapa.length; i++){
 
+    public void armarMapa() {
+        listaDeMapas.clear();
+        FactoryRoom[] opciones = FactoryRoom.values();
+
+        boolean exito = GenerarMapa(0, 0, opciones);
+
+        if (!exito) {
+            return;
         }
+
+
+        Map<String, Integer> mapasCargados = new HashMap<>();
+
+        for (int f = 0; f < FILAS; f++) {
+            for (int c = 0; c < COLUMNAS; c++) {
+                Room room = grillaRooms[f][c];
+                String ruta = room.getRuta();
+
+                if (!mapasCargados.containsKey(ruta)) {
+                    TiledMap map = mapLoader.load(ruta);
+                    listaDeMapas.add(map);
+                    mapasCargados.put(ruta, listaDeMapas.size());
+                }
+
+                matrizMapa[f][c] = mapasCargados.get(ruta);
+            }
+        }
+    }
+
+    private boolean GenerarMapa(int fila, int col, FactoryRoom[] opciones) {
+        if (fila >= FILAS) {
+            return true;
+        }
+        int sigFila = (col == COLUMNAS - 1) ? fila + 1 : fila;
+        int sigCol = (col == COLUMNAS - 1) ? 0 : col + 1;
+        List<FactoryRoom> candidatos = new ArrayList<>(List.of(opciones));
+
+        Collections.shuffle(candidatos);// mezclo el array de mierda
+
+        for (FactoryRoom candidato : candidatos) {
+            Room room = candidato.getRoom();
+
+            if (esHabitacionValida(fila, col, room)) {
+                grillaRooms[fila][col] = room;
+
+                if (GenerarMapa(sigFila, sigCol, opciones)) {
+                    return true;
+                }
+
+                grillaRooms[fila][col] = null;
+            }
+        }
+
+        return false;
+    }
+
+    private boolean esHabitacionValida(int fila, int col, Room room) {
+        if (fila == 0 && room.tienePuertaSur()) return false;
+        if (fila == FILAS - 1 && room.tienePuertaNorte()) return false;
+        if (col == 0 && room.tienePuertaOeste()) return false;
+        if (col == COLUMNAS - 1 && room.tienePuertaEste()) return false;
+
+        if (fila > 0 && grillaRooms[fila - 1][col] != null) {
+            Room vecinoSur = grillaRooms[fila - 1][col];
+            if (room.tienePuertaSur() != vecinoSur.tienePuertaNorte()) {
+                return false;
+            }
+        }
+
+        if (col > 0 && grillaRooms[fila][col - 1] != null) {
+            Room vecinoOeste = grillaRooms[fila][col - 1];
+            if (room.tienePuertaOeste() != vecinoOeste.tienePuertaEste()) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public void dibujarMapa(OrthographicCamera camera) {
@@ -91,7 +156,6 @@ public class MapManager {
                         float viewY = camera.position.y - (viewHeight / 2f) - offsetY;
 
                         mapRenderer.setView(translatedMatrix, viewX, viewY, viewWidth, viewHeight);
-
                         mapRenderer.render();
                     }
                 }
@@ -193,16 +257,10 @@ public class MapManager {
         }
     }
 
-    public List<Rectangle> getParedes() {
-        return paredes;
-    }
+    public List<Rectangle> getParedes() { return paredes; }
     public List<Enemigo> getEnemigos() { return enemigos; }
-    public Item getItem(int index) {
-        return items.get(index);
-    }
-    public List<Item> getItems() {
-        return items;
-    }
+    public Item getItem(int index) { return items.get(index); }
+    public List<Item> getItems() { return items; }
 
     public void dispose() {
         for (TiledMap map : listaDeMapas) {

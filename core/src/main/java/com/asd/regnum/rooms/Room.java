@@ -20,4 +20,9 @@ public  class Room {
         return this.direccion;
     }
 
+    public boolean tienePuertaNorte() { return puertaNorte; }
+    public boolean tienePuertaSur() { return puertaSur; }
+    public boolean tienePuertaEste() { return puertaEste; }
+    public boolean tienePuertaOeste() { return puertaOeste; }
+
 }

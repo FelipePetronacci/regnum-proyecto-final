@@ -10,6 +10,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
@@ -29,10 +30,15 @@ public class Jugador{
     private int vidaMaxima = 3;
     private float velocidad = 75f;
     private Texture textura = new Texture("player/player.png");
-    private Rectangle hitbox = new Rectangle(x, y, ANCHOJUGADOR, ALTURAJUGADOR);
+    private Rectangle hitbox = new Rectangle(x, y, ANCHOJUGADOR - 2, ALTURAJUGADOR);
     private List<Proyectil> proyectiles = new ArrayList<>();
     private List<ParticleEffect> efectosParticulas = new ArrayList<>();
+    private float alturaRelativa = ALTURAJUGADOR;
+    float tiempoAnimacion;
 
+    public Jugador(){
+        tiempoAnimacion = 0;
+    }
 
     public void actualizarMovimiento(List<Rectangle> paredes, float dt){
         controlarMovimiento(paredes, dt);
@@ -40,14 +46,21 @@ public class Jugador{
 
 
     public void dibujar(SpriteBatch batch){
-        batch.draw(textura, x, y, ANCHOJUGADOR, ALTURAJUGADOR);
+        batch.draw(textura, x, y, ANCHOJUGADOR, alturaRelativa);
     }
 
     public void controlarMovimiento(List<Rectangle> paredes, float dt){
 
+        if(!Gdx.input.isKeyPressed(Input.Keys.ANY_KEY)){
+            alturaRelativa = ALTURAJUGADOR;
+        }
+
         if (Gdx.input.isKeyPressed(Input.Keys.W)){
             y += velocidad * dt;
             hitbox.setPosition(x, y);
+            tiempoAnimacion += dt * 11f;
+            float desplazamientoY = MathUtils.sin(tiempoAnimacion) * -0.1f;
+            this.alturaRelativa = alturaRelativa + desplazamientoY;
             if (hayColision(paredes)) {
                 y -= velocidad * dt;
                 hitbox.setPosition(x, y);
@@ -56,6 +69,9 @@ public class Jugador{
         if (Gdx.input.isKeyPressed(Input.Keys.S)){
             y -= velocidad * dt;
             hitbox.setPosition(x, y);
+            tiempoAnimacion += dt * 11f;
+            float desplazamientoY = MathUtils.sin(tiempoAnimacion) * -0.1f;
+            this.alturaRelativa = alturaRelativa + desplazamientoY;
             if (hayColision(paredes)) {
                 y += velocidad * dt;
                 hitbox.setPosition(x, y);
@@ -65,6 +81,9 @@ public class Jugador{
         if (Gdx.input.isKeyPressed(Input.Keys.A)){
             x -= velocidad * dt;
             hitbox.setPosition(x, y);
+            tiempoAnimacion += dt * 11f;
+            float desplazamientoY = MathUtils.sin(tiempoAnimacion) * -0.1f;
+            this.alturaRelativa = alturaRelativa + desplazamientoY;
             if (hayColision(paredes)) {
                 x += velocidad * dt;
                 hitbox.setPosition(x, y);
@@ -73,6 +92,9 @@ public class Jugador{
         if (Gdx.input.isKeyPressed(Input.Keys.D)){
             x += velocidad * dt;
             hitbox.setPosition(x, y);
+            tiempoAnimacion += dt * 11f;
+            float desplazamientoY = MathUtils.sin(tiempoAnimacion) * -0.1f;
+            this.alturaRelativa = alturaRelativa + desplazamientoY;
             if (hayColision(paredes)) {
                 x -= velocidad * dt;
                 hitbox.setPosition(x, y);
@@ -106,6 +128,7 @@ public class Jugador{
             }
         }
     }
+
 
     public void controlarDisparios(FitViewport viewport, List<Rectangle> paredes, float dt, GestorDeSonidos gestorDeSonidos) {
         if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)){

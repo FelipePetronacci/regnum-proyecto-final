@@ -2,8 +2,11 @@ package com.asd.regnum;
 
 import com.asd.regnum.enemies.Enemigo;
 import com.asd.regnum.gestores.GestorDeSonidos;
+import com.asd.regnum.items.Corazon;
 import com.asd.regnum.items.Item;
+import com.asd.regnum.items.PowerUpDmg;
 import com.asd.regnum.jugador.Jugador;
+import com.asd.regnum.teleport.Teleport;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
@@ -16,15 +19,19 @@ import java.util.List;
 public class Mundo {
 
     private Jugador jugador;
+    private Teleport teleport;
     private MapManager mapManager;
     private GestorDeSonidos gestorDeSonidos;
     private float cooldownRecibirDmg = 0.0f;
     private List<ParticleEffect> efectosParticulas = new ArrayList<>();
+    private float xTeleport;
+    private float yTeleport;
 
     public Mundo(GestorDeSonidos gestorDeSonidos) {
         this.gestorDeSonidos = gestorDeSonidos;
         this.jugador = new Jugador();
         this.mapManager = new MapManager();
+        teleport = null;
 
         inicializarPosicionJugador();
     }
@@ -43,6 +50,14 @@ public class Mundo {
 
         jugador.setX(spawnX);
         jugador.setY(spawnY);
+        xTeleport = spawnX;
+        yTeleport = spawnY;
+
+    }
+    public void crearTeleport(){
+        if(mapManager.getEnemigos().size() == 0 && teleport == null){
+            teleport = new Teleport(xTeleport - 16, yTeleport - 16);
+        }
     }
 
     public void actualizar(float dt, FitViewport viewport) {
@@ -72,6 +87,10 @@ public class Mundo {
         mapManager.despawnearEnemigos();
     }
 
+    public Teleport getTeleport() {
+        return teleport;
+    }
+
     public Jugador getJugador() {
         return jugador;
     }
@@ -91,7 +110,12 @@ public class Mundo {
                 efectosParticulas.add(efecto);
                 mapManager.borrarItem(i);
                 item.dispose();
-                jugador.curarJugador();
+                if(item instanceof Corazon){
+                    jugador.curarJugador();
+                } else if (item instanceof PowerUpDmg) {
+                    jugador.aumentarDmg();
+                }
+
             }
         }
     }
@@ -115,5 +139,11 @@ public class Mundo {
     public void dispose() {
         jugador.dispose();
         mapManager.dispose();
+    }
+
+    public void dibujarTeleport(SpriteBatch batch) {
+        if(teleport != null){
+            teleport.dibujar(batch);
+        }
     }
 }

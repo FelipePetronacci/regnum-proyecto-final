@@ -87,6 +87,7 @@ public class GameScreen extends ScreenAdapter {
 
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
+        mundo.dibujarTeleport(batch);
         mundo.dibujarParticulas(batch);
         mundo.getJugador().dibujar(batch);
         mundo.getJugador().dibujarProyectil(batch);
@@ -100,7 +101,7 @@ public class GameScreen extends ScreenAdapter {
             enemigo.dibujar(batch);
         }
         batch.end();
-
+        mundo.crearTeleport();
         hud.render();
     }
 
