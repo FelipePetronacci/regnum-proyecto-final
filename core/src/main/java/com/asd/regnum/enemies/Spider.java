@@ -67,6 +67,15 @@ public class Spider extends Enemigo {
         }
     }
 
+    @Override
+    public void pausarMovimiento(boolean estado) {
+        if(estado == true){
+            this.velocidad = 0f;
+        }else{
+            this.velocidad = 60f;
+        }
+    }
+
     private boolean isColliding(float x, float y, List<Rectangle> collisionRects) {
         Rectangle spiderBounds = getHitbox(x, y);
         for (Rectangle rect : collisionRects) {

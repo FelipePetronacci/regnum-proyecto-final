@@ -12,6 +12,7 @@ public class Bat extends Enemigo {
     private static final int ALTURA = 27;
     private static final int ANCHURA = 40;
     private float angulo;
+    float velocidad = 120f;
 
     public Bat(float x, float y) {
         super(100, new Texture("enemies/bat.png"), x, y, getHitbox(x, y));
@@ -44,7 +45,7 @@ public class Bat extends Enemigo {
                 float currentX = this.getX();
                 float currentY = this.getY();
 
-                float velocidad = 120f;
+
                 currentX += dirX * velocidad * delta;
                 currentY += dirY * velocidad * delta;
 
@@ -53,6 +54,15 @@ public class Bat extends Enemigo {
             } else {
                 this.setEstado(EstadosEnemigo.QUIETO);
             }
+        }
+    }
+
+    @Override
+    public void pausarMovimiento(boolean estado) {
+        if(estado == true){
+            this.velocidad = 0f;
+        }else{
+            this.velocidad = 150f;
         }
     }
 

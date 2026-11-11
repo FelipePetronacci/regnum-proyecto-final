@@ -26,13 +26,14 @@ public class Mundo {
     private List<ParticleEffect> efectosParticulas = new ArrayList<>();
     private float xTeleport;
     private float yTeleport;
+    private boolean pausado;
 
     public Mundo(GestorDeSonidos gestorDeSonidos) {
         this.gestorDeSonidos = gestorDeSonidos;
         this.jugador = new Jugador();
         this.mapManager = new MapManager();
         teleport = null;
-
+        pausado = false;
         inicializarPosicionJugador();
     }
 
@@ -61,9 +62,10 @@ public class Mundo {
     }
 
     public void actualizar(float dt, FitViewport viewport) {
-
-        jugador.actualizarMovimiento(mapManager.getParedes(), dt);
-        jugador.controlarDisparios(viewport, mapManager.getParedes(), dt, gestorDeSonidos);
+        crearTeleport();
+        cargarZonaSegura();
+        jugador.actualizarMovimiento(mapManager.getParedes(), dt, pausado);
+        jugador.controlarDisparios(viewport, mapManager.getParedes(), dt, gestorDeSonidos, pausado);
         gestionarColisionJugadorEnemigo(dt);
         gestionarColisionJugadorItem();
         for(Item item : mapManager.getItems()){
@@ -85,6 +87,18 @@ public class Mundo {
         }
 
         mapManager.despawnearEnemigos();
+    }
+
+    private void cargarZonaSegura(){
+        if(Math.sqrt(Math.pow(xTeleport - jugador.getX(), 2) + Math.pow(yTeleport - jugador.getY(), 2)) < 100){
+            for (Enemigo enemigo : mapManager.getEnemigos()){
+                enemigo.pausarMovimiento(true);
+            }
+        }else{
+            for (Enemigo enemigo : mapManager.getEnemigos()){
+                enemigo.pausarMovimiento(false);
+            }
+        }
     }
 
     public Teleport getTeleport() {
@@ -136,14 +150,27 @@ public class Mundo {
         }
     }
 
+    public void borrarTeleport(){
+        this.teleport = null;
+    }
+
     public void dispose() {
         jugador.dispose();
         mapManager.dispose();
+        teleport.dispose();
+    }
+
+    public void reiniciarMapa(){
+        mapManager = new MapManager();
     }
 
     public void dibujarTeleport(SpriteBatch batch) {
         if(teleport != null){
             teleport.dibujar(batch);
         }
+    }
+
+    public void obtenerPausado(boolean pausado) {
+        this.pausado = pausado;
     }
 }

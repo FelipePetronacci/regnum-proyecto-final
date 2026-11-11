@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.5.0] - 2026-11-11
+### Añadido
+* **No tengo idea:** no tengo idea q añadi, hace banda no commiteo
+
+
 Todos los cambios notables en este proyecto serán documentados en este archivo.
 ## [0.4.0] - 2026-09-23
 ### Añadido

@@ -42,6 +42,8 @@ public abstract class Enemigo{
 
     }
 
+    public abstract void pausarMovimiento(boolean estado);
+
     public abstract void atacarJugador(float xJugador, float yJugador);
 
     public void colisionarBala(List<Proyectil> proyectiles){

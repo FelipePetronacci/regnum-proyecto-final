@@ -15,10 +15,28 @@ public class Teleport {
         this.x = x;
         this.y = y;
         this.texture = new Texture("teleport/teleport.png");
+        this.hitbox = new Rectangle(x, y, texture.getWidth(), texture.getHeight());
     }
 
     public void dibujar(SpriteBatch batch){
         batch.draw(texture, x, y, this.texture.getWidth(), this.texture.getHeight());
     }
 
+    public float getY() {
+        return y;
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public Rectangle getHitbox() {
+        return hitbox;
+    }
+
+
+
+    public void dispose(){
+        this.texture.dispose();
+    }
 }

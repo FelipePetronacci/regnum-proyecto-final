@@ -42,8 +42,6 @@ public class PantallaMuerte extends ScreenAdapter {
         fuente = generator.generateFont(parameter);
         generator.dispose();
 
-        Gdx.input.setInputProcessor(stage);
-
         TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
         buttonStyle.font = fuente;
         buttonStyle.fontColor = Color.WHITE;
@@ -74,7 +72,6 @@ public class PantallaMuerte extends ScreenAdapter {
             }
         });
 
-
         Table table = new Table();
         table.setFillParent(true);
         table.bottom();
@@ -88,8 +85,19 @@ public class PantallaMuerte extends ScreenAdapter {
     }
 
     @Override
-    public void render(float delta) {
+    public void show() {
+        Gdx.input.setInputProcessor(stage);
+    }
 
+    @Override
+    public void hide() {
+        if (Gdx.input.getInputProcessor() == stage) {
+            Gdx.input.setInputProcessor(null);
+        }
+    }
+
+    @Override
+    public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
