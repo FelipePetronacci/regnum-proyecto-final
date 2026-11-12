@@ -62,7 +62,7 @@ public class Hud implements Disposable {
         debugTable.setVisible(false);
     }
 
-    public void update(float playerX, float playerY, int enemigosSize) {
+    public void update(float playerX, float playerY, int enemigosSize, int nivelActual) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.F3)) {
             showDebug = !showDebug;
             debugTable.setVisible(showDebug);
@@ -70,7 +70,7 @@ public class Hud implements Disposable {
 
         if (showDebug) {
             int fps = Gdx.graphics.getFramesPerSecond();
-            String debugText = String.format("DEBUG MENU\nFPS: %d\nPOS X: %.2f\nPOS Y: %.2f\nEnemigosTotales: %d", fps, playerX, playerY, enemigosSize);
+            String debugText = String.format("DEBUG MENU\nFPS: %d\nPOS X: %.2f\nPOS Y: %.2f\nEnemigosTotales: %d\nNivelActual: %d", fps, playerX, playerY, enemigosSize, nivelActual);
             debugLabel.setText(debugText);
         }
     }
@@ -110,6 +110,10 @@ public class Hud implements Disposable {
 
     private boolean debounceF3() {
         return false;
+    }
+
+    public boolean isShowDebug() {
+        return showDebug;
     }
 
     @Override

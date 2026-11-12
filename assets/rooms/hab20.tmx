@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="23" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="65">
+ <tileset firstgid="1" name="tileset" tilewidth="16" tileheight="16" tilecount="64" columns="8">
+  <image source="../tileset/tileset.png" width="128" height="128"/>
+ </tileset>
+ <layer id="1" name="Capa de patrones 1" width="23" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxjYCAOMAMxE5SmBDDjwEx45Egxm4kEPJjNZkajh4q7R80eTSf0NptW5Qk+v5BiDgBJsAGV
+  </data>
+ </layer>
+ <objectgroup id="3" name="spawnEnemigo">
+  <object id="58" x="176" y="112" width="16" height="16"/>
+  <object id="59" x="112" y="112" width="16" height="16"/>
+  <object id="60" x="240" y="112" width="16" height="16"/>
+ </objectgroup>
+ <objectgroup id="2" name="colisiones">
+  <object id="47" x="160" y="0" width="16" height="32"/>
+  <object id="48" x="80" y="16" width="80" height="16"/>
+  <object id="49" x="80" y="32" width="16" height="176"/>
+  <object id="50" x="80" y="208" width="96" height="16"/>
+  <object id="51" x="160" y="224" width="16" height="16"/>
+  <object id="52" x="192" y="208" width="16" height="32"/>
+  <object id="53" x="208" y="208" width="80" height="16"/>
+  <object id="54" x="272" y="16" width="16" height="192"/>
+  <object id="55" x="192" y="16" width="80" height="16"/>
+  <object id="56" x="192" y="0" width="16" height="16"/>
+  <object id="61" x="160" y="64" width="16" height="16"/>
+  <object id="62" x="160" y="160" width="16" height="16"/>
+  <object id="63" x="192" y="160" width="16" height="16"/>
+  <object id="64" x="192" y="64" width="16" height="16"/>
+ </objectgroup>
+</map>

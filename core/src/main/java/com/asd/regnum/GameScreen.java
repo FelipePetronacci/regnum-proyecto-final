@@ -12,12 +12,14 @@ import com.asd.regnum.teleport.Teleport;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
@@ -40,6 +42,9 @@ public class GameScreen extends ScreenAdapter {
     private GestorDeSonidos gestorDeSonidos;
     private Hud hud;
     private boolean pausado;
+    private boolean reproduciendoTransicion;
+    private float tiempoAnimacion;
+    private ShapeRenderer shapeRenderer;
 
     private Mundo mundo;
 
@@ -48,6 +53,7 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void show() {
+        shapeRenderer = new ShapeRenderer();
         camera = new OrthographicCamera();
         viewport = new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, camera);
         this.textureFlecha = new Texture("hud/flecha.png");
@@ -85,10 +91,40 @@ public class GameScreen extends ScreenAdapter {
 
         float dt = Gdx.graphics.getDeltaTime();
 
+        if (mundo.getTeleport() != null) {
+            if (mundo.getMapManager().getEnemigos().isEmpty() && chequearColisionJugadorTeleport(mundo.getJugador(), mundo.getTeleport())) {
+                reproduciendoTransicion = true;
+                tiempoAnimacion = 0f;
+                mundo.borrarTeleport();
+                mundo.reiniciarMapa();
+            }
+        }
+
+        if (reproduciendoTransicion) {
+            tiempoAnimacion += dt;
+
+            Gdx.gl.glClearColor(0, 0, 0, 1);
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+            batch.begin();
+            batch.setProjectionMatrix(camera.combined);
+            String textoTransicion = "Pasando al nivel " + mundo.getNivelActual() + "...";
+            fuente2.draw(
+                batch,
+                textoTransicion,
+                camera.position.x - 90,
+                camera.position.y
+            );
+            batch.end();
+            if (tiempoAnimacion >= 4f) {
+                reproduciendoTransicion = false;
+            }
+            return;
+        }
+
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             pausado = !pausado;
         }
-        batch.begin();
+
         if(pausado){
             dt = 0;
         } else if (!pausado) {
@@ -97,17 +133,9 @@ public class GameScreen extends ScreenAdapter {
 
         mundo.obtenerPausado(pausado);
 
-        if(mundo.getTeleport() != null){
-            if(mundo.getMapManager().getEnemigos().size() == 0 && chequearColisionJugadorTeleport(mundo.getJugador(), mundo.getTeleport())){
-                mundo.reiniciarMapa();
-            }
-        }
-
-        if(mundo.getMapManager().getEnemigos().size() != 0){
+        if(!mundo.getMapManager().getEnemigos().isEmpty()){
             mundo.borrarTeleport();
         }
-
-
 
         mundo.actualizar(dt, viewport);
 
@@ -117,19 +145,30 @@ public class GameScreen extends ScreenAdapter {
             mundo.getJugador().getY() + 11f / 2f,
             0
         );
+        viewport.apply();
         camera.update();
-        hud.update(mundo.getJugador().getX(), mundo.getJugador().getY(), mundo.getMapManager().getEnemigos().size());
+
+        hud.update(mundo.getJugador().getX(), mundo.getJugador().getY(), mundo.getMapManager().getEnemigos().size(), mundo.getNivelActual());
         hud.updateHealth(mundo.getJugador().getVida());
+
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-
-
-        viewport.apply();
         mundo.getMapManager().dibujarMapa(camera);
         batch.setProjectionMatrix(camera.combined);
 
+        if(hud.isShowDebug()){
+            shapeRenderer.setProjectionMatrix(camera.combined);
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+            shapeRenderer.setColor(Color.RED);
+            for(Enemigo enemigo : mundo.getMapManager().getEnemigos()){
+                shapeRenderer.rect(enemigo.getHitbox().x, enemigo.getHitbox().y, enemigo.getHitbox().width, enemigo.getHitbox().height);
+            }
+            shapeRenderer.end();
+        }
+
+        batch.begin();
         mundo.dibujarTeleport(batch);
         mundo.dibujarParticulas(batch);
         mundo.getJugador().dibujar(batch);
@@ -145,13 +184,13 @@ public class GameScreen extends ScreenAdapter {
             enemigo.dibujar(batch);
         }
 
-
         if(pausado){
             fuente2.draw(batch, "--PAUSADO--", mundo.getJugador().getX() - 42 , camera.position.y + 50);
         }
 
         batch.end();
         dibujarFlecha(mundo.getTeleport(), batch, mundo.getJugador());
+
         hud.render();
     }
 
@@ -168,6 +207,7 @@ public class GameScreen extends ScreenAdapter {
             float anguloGrados = MathUtils.atan2(deltaY, deltaX) * MathUtils.radiansToDegrees;
 
             batch.begin();
+            batch.setProjectionMatrix(camera.combined);
             batch.draw(
                 textureFlecha,
                 jugador.getX() + 5, jugador.getY() + 16,

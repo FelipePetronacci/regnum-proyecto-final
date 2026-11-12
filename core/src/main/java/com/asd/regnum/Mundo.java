@@ -27,11 +27,13 @@ public class Mundo {
     private float xTeleport;
     private float yTeleport;
     private boolean pausado;
+    private int nivelActual;
 
     public Mundo(GestorDeSonidos gestorDeSonidos) {
+        nivelActual = 1;
         this.gestorDeSonidos = gestorDeSonidos;
         this.jugador = new Jugador();
-        this.mapManager = new MapManager();
+        this.mapManager = new MapManager(nivelActual);
         teleport = null;
         pausado = false;
         inicializarPosicionJugador();
@@ -143,7 +145,7 @@ public class Mundo {
         for(Enemigo enemigo : mapManager.getEnemigos()){
             if(jugador.getHitbox().overlaps(enemigo.getHitbox()) && cooldownRecibirDmg <= 0.0f){
                 jugador.recibirDmg();
-                cooldownRecibirDmg = 35.0f;
+                cooldownRecibirDmg = 30.0f;
             } else {
                 cooldownRecibirDmg -= dt;
             }
@@ -161,13 +163,20 @@ public class Mundo {
     }
 
     public void reiniciarMapa(){
-        mapManager = new MapManager();
+        nivelActual++;
+        mapManager = new MapManager(nivelActual);
     }
 
     public void dibujarTeleport(SpriteBatch batch) {
         if(teleport != null){
             teleport.dibujar(batch);
         }
+    }
+
+
+
+    public int getNivelActual() {
+        return nivelActual;
     }
 
     public void obtenerPausado(boolean pausado) {

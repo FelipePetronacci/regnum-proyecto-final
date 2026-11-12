@@ -31,20 +31,25 @@ public class MapManager {
     private List<Item> items;
     private int[][] matrizMapa;
     private Room[][] grillaRooms;
+    private int nivelActual;
 
     private final int FILAS = 3;
     private final int COLUMNAS = 3;
     private final int ROOM_WIDTH = 23 * 16;
     private final int ROOM_HEIGHT = 15 * 16;
 
-
-
-
-    public MapManager() {
+    public MapManager(int nivelActual) {
+        this.nivelActual = nivelActual;
         mapLoader = new TmxMapLoader();
         listaDeMapas = new ArrayList<>();
-        matrizMapa = new int[FILAS][COLUMNAS];
-        grillaRooms = new Room[FILAS][COLUMNAS];
+
+        // Si el nivel es divisible por 3, es una sala de jefe (matriz de 1x1)
+        if (nivelActual > 0 && nivelActual % 3 == 0) {
+            matrizMapa = new int[3][3];
+        } else {
+            matrizMapa = new int[FILAS][COLUMNAS];
+            grillaRooms = new Room[FILAS][COLUMNAS];
+        }
 
         armarMapa();
 
@@ -54,17 +59,23 @@ public class MapManager {
         spawnearEnemigos();
     }
 
-
     public void armarMapa() {
         listaDeMapas.clear();
-        FactoryRoom[] opciones = FactoryRoom.values();
 
+        if (nivelActual > 0 && nivelActual % 3 == 0) {
+            String rutaJefe = "rooms/habJefe.tmx";
+            TiledMap mapaJefe = mapLoader.load(rutaJefe);
+            listaDeMapas.add(mapaJefe);
+            matrizMapa[1][1] = 1;
+            return;
+        }
+
+        FactoryRoom[] opciones = FactoryRoom.values();
         boolean exito = GenerarMapa(0, 0, opciones);
 
         if (!exito) {
             return;
         }
-
 
         Map<String, Integer> mapasCargados = new HashMap<>();
 
@@ -92,7 +103,7 @@ public class MapManager {
         int sigCol = (col == COLUMNAS - 1) ? 0 : col + 1;
         List<FactoryRoom> candidatos = new ArrayList<>(List.of(opciones));
 
-        Collections.shuffle(candidatos);// mezclo el array de mierda
+        Collections.shuffle(candidatos); //mezclo el array de mierda
 
         for (FactoryRoom candidato : candidatos) {
             Room room = candidato.getRoom();
@@ -198,23 +209,29 @@ public class MapManager {
                                     Rectangle rectOriginal = ((RectangleMapObject) object).getRectangle();
                                     float xGlobal = rectOriginal.x + offsetX;
                                     float yGlobal = rectOriginal.y + offsetY;
-                                    if(Aleatorio.generarAleatorio(1, 2) == 2) {
-                                        int num = Aleatorio.generarAleatorio(1, 100);
-                                        if(num < 15) {
-                                            Enemigo enemigo = new Bat(xGlobal, yGlobal);
-                                            enemigos.add(enemigo);
-                                        }else if(num < 100) {
-                                            Enemigo enemigo = new Spider(xGlobal, yGlobal);
-                                            enemigos.add(enemigo);
+
+                                    if (nivelActual % 3 == 0) {
+                                        Enemigo jefe = new JefeEsqueleto(xGlobal, yGlobal);
+                                        enemigos.add(jefe);
+                                    } else {
+                                        if(Aleatorio.generarAleatorio(1, 2) == 2) {
+                                            int num = Aleatorio.generarAleatorio(1, 100);
+                                            if(num < 15) {
+                                                Enemigo enemigo = new Bat(xGlobal, yGlobal);
+                                                enemigos.add(enemigo);
+                                            } else if(num < 100) {
+                                                Enemigo enemigo = new Spider(xGlobal, yGlobal);
+                                                enemigos.add(enemigo);
+                                            }
+                                        } else if(Aleatorio.generarAleatorio(1, 2) == 2){
+                                            Item item;
+                                            if(Aleatorio.generarAleatorio(1, 2) == 1){
+                                                item = new Corazon(xGlobal, yGlobal);
+                                            } else {
+                                                item = new PowerUpDmg(xGlobal, yGlobal);
+                                            }
+                                            items.add(item);
                                         }
-                                    }else if(Aleatorio.generarAleatorio(1, 2) == 2){
-                                        Item item;
-                                        if(Aleatorio.generarAleatorio(1, 2) == 1){
-                                            item = new Corazon(xGlobal, yGlobal);
-                                        } else {
-                                            item = new PowerUpDmg(xGlobal, yGlobal);
-                                        }
-                                        items.add(item);
                                     }
                                 }
                             }
@@ -267,11 +284,16 @@ public class MapManager {
             map.dispose();
         }
         mapRenderer.dispose();
-        for (Enemigo enemigo : enemigos){
-            enemigo.dispose();
+        if (enemigos != null) {
+            for (Enemigo enemigo : enemigos){
+                enemigo.dispose();
+            }
         }
-        for (Item item : items){
-            item.dispose();
+        if (items != null) {
+            for (Item item : items){
+                item.dispose();
+            }
         }
     }
 }
+

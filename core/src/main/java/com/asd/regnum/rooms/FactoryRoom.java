@@ -2,12 +2,13 @@ package com.asd.regnum.rooms;
 
 public enum FactoryRoom {
 
-    //             Norte, Sur, Este, Oeste
+    //             Norte,
+    //          oeste, este
+    //             Sur,
     ROOM1("rooms/hab1.tmx", true, true, true, true),   // 4 accesos (Centro)
     ROOM2("rooms/hab2.tmx", true, true, true, true),   // 4 accesos
     ROOM3("rooms/hab3.tmx", true, true, true, true),   // 4 accesos
 
-    // Pasillos / Codos / Esquinas
     ROOM4("rooms/hab4.tmx", false, true, false, true),  // S, O (Esquina sup-der)
     ROOM5("rooms/hab5.tmx", false, true, false, false), // S (Callejón sin salida)
     ROOM6("rooms/hab6.tmx", true, false, true, false),  // N, E (Esquina inf-izq)
@@ -15,12 +16,21 @@ public enum FactoryRoom {
     ROOM8("rooms/hab8.tmx", false, true, true, false),  // S, E (Esquina sup-izq)
     ROOM9("rooms/hab9.tmx", false, false, true, true),  // E, O (Pasillo horizontal)
 
-    // --- VARIANTES FALTANTES PARA CERRAR EL MAPA PERFECTAMENTE ---
     ROOM10("rooms/hab10.tmx", true, true, false, false), // N, S (Pasillo vertical)
     ROOM11("rooms/hab11.tmx", true, true, true, false),  // N, S, E (T-Junction)
     ROOM12("rooms/hab12.tmx", true, true, false, true),  // N, S, O (T-Junction)
     ROOM13("rooms/hab13.tmx", true, false, true, true),  // N, E, O (T-Junction)
-    ROOM14("rooms/hab14.tmx", false, true, true, true);  // S, E, O (T-Junction)
+    ROOM14("rooms/hab14.tmx", false, true, true, true),  // S, E, O (T-Junction)
+    ROOM15("rooms/hab15.tmx", true, true, false, false),
+    ROOM16("rooms/hab16.tmx", true, true, true, true),
+    ROOM17("rooms/hab17.tmx", true, true, false, true),
+    ROOM18("rooms/hab18.tmx", true, true, true, true),
+    //ROOM19("rooms/hab19.tmx", true, true, false, true),
+    ROOM20("rooms/hab20.tmx", true, true, false, false),
+    ROOM21("rooms/hab21.tmx", false, false, true, true),
+    ROOM22("rooms/hab22.tmx", true, true, true, true),
+    ROOM23("rooms/hab23.tmx", false, false, true, true),
+    ROOM24("rooms/hab24.tmx", false, true, true, true);
 
     private String direccion;
     private boolean puertaNorte;
