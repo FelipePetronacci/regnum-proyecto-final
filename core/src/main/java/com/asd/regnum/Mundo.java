@@ -1,6 +1,7 @@
 package com.asd.regnum;
 
 import com.asd.regnum.enemies.Enemigo;
+import com.asd.regnum.gestores.GestorBD;
 import com.asd.regnum.gestores.GestorDeSonidos;
 import com.asd.regnum.items.Corazon;
 import com.asd.regnum.items.Item;
@@ -36,6 +37,7 @@ public class Mundo {
         this.mapManager = new MapManager(nivelActual);
         teleport = null;
         pausado = false;
+
         inicializarPosicionJugador();
     }
 
@@ -92,7 +94,7 @@ public class Mundo {
     }
 
     private void cargarZonaSegura(){
-        if(Math.sqrt(Math.pow(xTeleport - jugador.getX(), 2) + Math.pow(yTeleport - jugador.getY(), 2)) < 100){
+        if(Math.sqrt(Math.pow(xTeleport - jugador.getX(), 2) + Math.pow(yTeleport - jugador.getY(), 2)) < 100 && nivelActual%3 != 0){
             for (Enemigo enemigo : mapManager.getEnemigos()){
                 enemigo.pausarMovimiento(true);
             }

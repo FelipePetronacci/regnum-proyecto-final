@@ -49,7 +49,6 @@ public class MainMenuScreen implements Screen {
         font = generator.generateFont(parameter);
         generator.dispose();
 
-
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
         textButtonStyle.font = font;
         textButtonStyle.fontColor = Color.WHITE;
@@ -62,6 +61,7 @@ public class MainMenuScreen implements Screen {
         stage.addActor(table);
 
         TextButton playButton = new TextButton("Jugar", textButtonStyle);
+        TextButton rankingButton = new TextButton("Ranking", textButtonStyle); // <-- NUEVO BOTÓN
         TextButton exitButton = new TextButton("Salir", textButtonStyle);
 
         playButton.addListener(new ClickListener() {
@@ -70,6 +70,17 @@ public class MainMenuScreen implements Screen {
                 if (!isTransitioning) {
                     isTransitioning = true;
                     Gdx.input.setInputProcessor(null);
+                }
+            }
+        });
+
+        // Evento para abrir la pantalla de Ranking
+        rankingButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (!isTransitioning) {
+                    game.setScreen(new MenuRanking(game));
+                    dispose();
                 }
             }
         });
@@ -84,6 +95,7 @@ public class MainMenuScreen implements Screen {
         });
 
         table.add(playButton).padBottom(15).row();
+        table.add(rankingButton).padBottom(15).row(); // <-- AÑADIDO A LA TABLA
         table.add(exitButton);
     }
 
@@ -98,10 +110,13 @@ public class MainMenuScreen implements Screen {
             if (progress > 1f) progress = 1f;
 
             float targetZoom = 1.0f - (0.5f * progress);
+
             ((OrthographicCamera) stage.getCamera()).zoom = targetZoom;
 
             float targetX = 350 + (150 * progress);
+
             float targetY = 150 + (50 * progress);
+
             stage.getCamera().position.set(targetX, targetY, 0);
 
             stage.getCamera().update();

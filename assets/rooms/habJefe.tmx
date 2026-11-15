@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="23" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="50">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="23" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="64">
  <tileset firstgid="1" name="tileset" tilewidth="16" tileheight="16" tilecount="64" columns="8">
   <image source="../tileset/tileset.png" width="128" height="128"/>
  </tileset>
  <layer id="1" name="Capa de patrones 1" width="23" height="15">
   <data encoding="base64" compression="zlib">
-   eJxjZmBgYKYhZqIBHk5mg/iMVDKHnmYP1fAeqmYPRDqBgZGSTmiFAR/8Av8=
+   eJxjZmBgYKYhZqIBHjV71OxRs2lvNgwMNXeTazatMAAMjAL3
   </data>
  </layer>
+ <objectgroup id="4" name="waypoints">
+  <object id="57" x="48" y="64" width="16" height="16"/>
+  <object id="58" x="304" y="64" width="16" height="16"/>
+  <object id="59" x="304" y="176" width="16" height="16"/>
+  <object id="60" x="48" y="176" width="16" height="16"/>
+  <object id="62" x="176" y="128" width="16" height="16"/>
+  <object id="63" x="176" y="112" width="16" height="16"/>
+ </objectgroup>
  <objectgroup id="3" name="spawnEnemigo">
   <object id="44" x="176" y="48" width="16" height="16"/>
  </objectgroup>
@@ -16,9 +24,5 @@
   <object id="41" x="16" y="224" width="336" height="16"/>
   <object id="42" x="352" y="0" width="16" height="240"/>
   <object id="45" x="16" y="0" width="336" height="16"/>
-  <object id="46" x="64" y="64" width="32" height="32"/>
-  <object id="47" x="64" y="160" width="32" height="32"/>
-  <object id="48" x="272" y="160" width="32" height="32"/>
-  <object id="49" x="272" y="64" width="32" height="32"/>
  </objectgroup>
 </map>

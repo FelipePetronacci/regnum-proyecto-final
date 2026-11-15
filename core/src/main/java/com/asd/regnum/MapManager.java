@@ -14,6 +14,7 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,7 +44,6 @@ public class MapManager {
         mapLoader = new TmxMapLoader();
         listaDeMapas = new ArrayList<>();
 
-        // Si el nivel es divisible por 3, es una sala de jefe (matriz de 1x1)
         if (nivelActual > 0 && nivelActual % 3 == 0) {
             matrizMapa = new int[3][3];
         } else {
@@ -103,7 +103,7 @@ public class MapManager {
         int sigCol = (col == COLUMNAS - 1) ? 0 : col + 1;
         List<FactoryRoom> candidatos = new ArrayList<>(List.of(opciones));
 
-        Collections.shuffle(candidatos); //mezclo el array de mierda
+        Collections.shuffle(candidatos);
 
         for (FactoryRoom candidato : candidatos) {
             Room room = candidato.getRoom();
@@ -198,12 +198,25 @@ public class MapManager {
                     TiledMap mapa = listaDeMapas.get(tipoHabitacion - 1);
 
                     if (mapa != null) {
+                        float offsetX = col * ROOM_WIDTH;
+                        float offsetY = fila * ROOM_HEIGHT;
+
+                        List<Vector2> waypoints = new ArrayList<>();
+                        MapLayer capaWaypoints = mapa.getLayers().get("waypoints");
+
+                        if (capaWaypoints != null) {
+                            for (MapObject objeto : capaWaypoints.getObjects()) {
+                                if (objeto instanceof RectangleMapObject) {
+                                    Rectangle rect = ((RectangleMapObject) objeto).getRectangle();
+
+                                    waypoints.add(new Vector2(rect.x + offsetX, rect.y + offsetY));
+                                }
+                            }
+                        }
+
                         MapLayer capaSpawns = mapa.getLayers().get("spawnEnemigo");
 
                         if (capaSpawns != null) {
-                            float offsetX = col * ROOM_WIDTH;
-                            float offsetY = fila * ROOM_HEIGHT;
-
                             for (MapObject object : capaSpawns.getObjects()) {
                                 if (object instanceof RectangleMapObject) {
                                     Rectangle rectOriginal = ((RectangleMapObject) object).getRectangle();
@@ -211,7 +224,7 @@ public class MapManager {
                                     float yGlobal = rectOriginal.y + offsetY;
 
                                     if (nivelActual % 3 == 0) {
-                                        Enemigo jefe = new JefeEsqueleto(xGlobal, yGlobal);
+                                        Enemigo jefe = new JefeEsqueleto(xGlobal, yGlobal, waypoints);
                                         enemigos.add(jefe);
                                     } else {
                                         if(Aleatorio.generarAleatorio(1, 2) == 2) {
@@ -296,4 +309,3 @@ public class MapManager {
         }
     }
 }
-

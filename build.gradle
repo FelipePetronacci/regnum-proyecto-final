@@ -66,4 +66,11 @@ subprojects {
   }
 }
 
+// Dependencia de SQLite JDBC para el núcleo del juego en PC
+project(":core") {
+  dependencies {
+    implementation 'org.xerial:sqlite-jdbc:3.45.1.0'
+  }
+}
+
 eclipse.project.name = 'Regnum' + '-parent'

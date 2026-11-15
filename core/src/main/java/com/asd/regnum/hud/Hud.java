@@ -62,15 +62,18 @@ public class Hud implements Disposable {
         debugTable.setVisible(false);
     }
 
-    public void update(float playerX, float playerY, int enemigosSize, int nivelActual) {
+    public void update(float playerX, float playerY, int enemigosSize, int nivelActual, float tiempoJuego) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.F3)) {
             showDebug = !showDebug;
             debugTable.setVisible(showDebug);
         }
 
         if (showDebug) {
+            int minutos = (int) (tiempoJuego / 60);
+            int segundos = (int) (tiempoJuego % 60);
+
             int fps = Gdx.graphics.getFramesPerSecond();
-            String debugText = String.format("DEBUG MENU\nFPS: %d\nPOS X: %.2f\nPOS Y: %.2f\nEnemigosTotales: %d\nNivelActual: %d", fps, playerX, playerY, enemigosSize, nivelActual);
+            String debugText = String.format("DEBUG MENU\nFPS: %d\nPOS X: %.2f\nPOS Y: %.2f\nEnemigosTotales: %d\nNivelActual: %d\nTiempo Jugado: %02d:%02d", fps, playerX, playerY, enemigosSize, nivelActual, minutos, segundos);
             debugLabel.setText(debugText);
         }
     }

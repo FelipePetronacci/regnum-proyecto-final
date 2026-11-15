@@ -45,6 +45,7 @@ public class GameScreen extends ScreenAdapter {
     private boolean reproduciendoTransicion;
     private float tiempoAnimacion;
     private ShapeRenderer shapeRenderer;
+    private float tiempoJuego;
 
     private Mundo mundo;
 
@@ -70,6 +71,8 @@ public class GameScreen extends ScreenAdapter {
         fuente2 = generator2.generateFont(parameter2);
         generator2.dispose();
 
+        tiempoJuego = 0f;
+
         pausado = false;
         batch = new SpriteBatch();
         gestorDeMusica = new GestorDeMusica();
@@ -84,15 +87,24 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void render(float delta) {
         if (mundo.getJugador().getVida() <= 0) {
-            game.setScreen(new PantallaMuerte(game));
+            int minutos = (int) (tiempoJuego / 60);
+            int segundos = (int) (tiempoJuego % 60);
+            String tiempoJugadoString = minutos + ":" + segundos;
+            game.setScreen(new PantallaMuerte(game, mundo.getNivelActual(), tiempoJugadoString));
             return;
         }
 
-
         float dt = Gdx.graphics.getDeltaTime();
 
+        if(!pausado){
+            tiempoJuego += dt;
+        }
+
+
+
+
         if (mundo.getTeleport() != null) {
-            if (mundo.getMapManager().getEnemigos().isEmpty() && chequearColisionJugadorTeleport(mundo.getJugador(), mundo.getTeleport())) {
+            if (mundo.getMapManager().getEnemigos().isEmpty() && chequearColisionJugadorTeleport(mundo.getJugador(), mundo.getTeleport()) && Gdx.input.isButtonJustPressed(Input.Keys.E)) {
                 reproduciendoTransicion = true;
                 tiempoAnimacion = 0f;
                 mundo.borrarTeleport();
@@ -148,7 +160,7 @@ public class GameScreen extends ScreenAdapter {
         viewport.apply();
         camera.update();
 
-        hud.update(mundo.getJugador().getX(), mundo.getJugador().getY(), mundo.getMapManager().getEnemigos().size(), mundo.getNivelActual());
+        hud.update(mundo.getJugador().getX(), mundo.getJugador().getY(), mundo.getMapManager().getEnemigos().size(), mundo.getNivelActual(), tiempoJuego);
         hud.updateHealth(mundo.getJugador().getVida());
 
 

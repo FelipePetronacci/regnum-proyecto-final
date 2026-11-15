@@ -1,5 +1,6 @@
 package com.asd.regnum;
 import com.asd.regnum.menu.MainMenuScreen;
+import com.asd.regnum.menu.PantallaMuerte;
 import com.badlogic.gdx.Game;
 
 public class Main extends Game {
