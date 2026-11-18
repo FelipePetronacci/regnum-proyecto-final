@@ -6,9 +6,11 @@ import com.asd.regnum.gestores.GestorDeSonidos;
 import com.asd.regnum.items.Corazon;
 import com.asd.regnum.items.Item;
 import com.asd.regnum.items.PowerUpDmg;
+import com.asd.regnum.items.PowerUpVel;
 import com.asd.regnum.jugador.Jugador;
 import com.asd.regnum.teleport.Teleport;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -29,8 +31,10 @@ public class Mundo {
     private float yTeleport;
     private boolean pausado;
     private int nivelActual;
+    private boolean empezoMovimiento;
 
     public Mundo(GestorDeSonidos gestorDeSonidos) {
+        empezoMovimiento = false;
         nivelActual = 1;
         this.gestorDeSonidos = gestorDeSonidos;
         this.jugador = new Jugador();
@@ -60,7 +64,7 @@ public class Mundo {
 
     }
     public void crearTeleport(){
-        if(mapManager.getEnemigos().size() == 0 && teleport == null){
+        if(mapManager.getEnemigos().isEmpty() && teleport == null){
             teleport = new Teleport(xTeleport - 16, yTeleport - 16);
         }
     }
@@ -94,15 +98,35 @@ public class Mundo {
     }
 
     private void cargarZonaSegura(){
-        if(Math.sqrt(Math.pow(xTeleport - jugador.getX(), 2) + Math.pow(yTeleport - jugador.getY(), 2)) < 100 && nivelActual%3 != 0){
-            for (Enemigo enemigo : mapManager.getEnemigos()){
-                enemigo.pausarMovimiento(true);
+
+        if(!empezoMovimiento){
+            if(partidaEmpezada()){
+                empezoMovimiento = true;
+                return;
             }
-        }else{
-            for (Enemigo enemigo : mapManager.getEnemigos()){
-                enemigo.pausarMovimiento(false);
+            if(Math.sqrt(Math.pow(xTeleport - jugador.getX(), 2) + Math.pow(yTeleport - jugador.getY(), 2)) < 100){
+                for (Enemigo enemigo : mapManager.getEnemigos()){
+                    enemigo.pausarMovimiento(true);
+                }
+                return;
+            }else{
+                for (Enemigo enemigo : mapManager.getEnemigos()){
+                    enemigo.pausarMovimiento(false);
+                }
+                return;
             }
         }
+        for (Enemigo enemigo : mapManager.getEnemigos()){
+            enemigo.pausarMovimiento(false);
+        }
+    }
+
+    private boolean partidaEmpezada() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY) && !empezoMovimiento){
+            empezoMovimiento = true;
+            return true;
+        }
+        return false;
     }
 
     public Teleport getTeleport() {
@@ -132,6 +156,8 @@ public class Mundo {
                     jugador.curarJugador();
                 } else if (item instanceof PowerUpDmg) {
                     jugador.aumentarDmg();
+                } else if (item instanceof PowerUpVel) {
+                    jugador.aumentarVel();
                 }
 
             }
@@ -143,13 +169,20 @@ public class Mundo {
         }
     }
 
-    public void gestionarColisionJugadorEnemigo(float dt){
-        for(Enemigo enemigo : mapManager.getEnemigos()){
-            if(jugador.getHitbox().overlaps(enemigo.getHitbox()) && cooldownRecibirDmg <= 0.0f){
+    public void gestionarColisionJugadorEnemigo(float dt) {
+
+        if (cooldownRecibirDmg > 0.0f) {
+            cooldownRecibirDmg -= dt;
+        }
+
+        cooldownRecibirDmg = Math.max(0.0f, cooldownRecibirDmg);
+        for (Enemigo enemigo : mapManager.getEnemigos()) {
+
+            if (jugador.getHitbox().overlaps(enemigo.getHitbox())
+                && cooldownRecibirDmg <= 0.0f) {
                 jugador.recibirDmg();
-                cooldownRecibirDmg = 30.0f;
-            } else {
-                cooldownRecibirDmg -= dt;
+                cooldownRecibirDmg = 2.0f;
+                break;
             }
         }
     }
@@ -160,12 +193,22 @@ public class Mundo {
 
     public void dispose() {
         jugador.dispose();
-        mapManager.dispose();
-        teleport.dispose();
+        if (mapManager != null) {
+            mapManager.dispose();
+        }
+        if (teleport != null) {
+            teleport.dispose();
+            teleport = null;
+        }
+        for (ParticleEffect efecto : efectosParticulas) {
+            efecto.dispose();
+        }
+        efectosParticulas.clear();
     }
 
     public void reiniciarMapa(){
         nivelActual++;
+        empezoMovimiento = false;
         mapManager = new MapManager(nivelActual);
     }
 

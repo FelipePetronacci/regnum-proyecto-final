@@ -156,7 +156,12 @@ public class Jugador{
         }
     }
 
-    public void aumentarDmg() {
+    public void aumentarVel(){
+        this.velocidad += Aleatorio.generarAleatorio(19);
+    }
+
+
+    public void aumentarDmg(){
         this.dmg += Aleatorio.generarAleatorio(19);
     }
 
@@ -169,8 +174,14 @@ public class Jugador{
         this.vida--;
     }
 
-    public void setX(float x) { this.x = x; }
-    public void setY(float y) { this.y = y; }
+    public void setX(float x) {
+        this.x = x;
+        hitbox.setPosition(this.x, this.y);
+    }
+    public void setY(float y) {
+        this.y = y;
+        hitbox.setPosition(this.x, this.y);
+    }
     public float getX() { return x; }
     public float getY() { return y; }
     public int getALTURAJUGADOR() { return ALTURAJUGADOR; }

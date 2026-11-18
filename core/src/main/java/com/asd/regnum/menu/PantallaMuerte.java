@@ -145,9 +145,17 @@ public class PantallaMuerte extends ScreenAdapter {
 
     @Override
     public void dispose() {
-        stage.dispose();
-        batch.dispose();
-        fuente.dispose();
-        backgroundTexture.dispose();
+        if (stage != null) {
+            stage.dispose();
+        }
+        if (fuente != null) {
+            fuente.dispose();
+        }
+        if (backgroundTexture != null) {
+            backgroundTexture.dispose();
+        }
+        if (bd != null) {
+            bd.desconectar();
+        }
     }
 }

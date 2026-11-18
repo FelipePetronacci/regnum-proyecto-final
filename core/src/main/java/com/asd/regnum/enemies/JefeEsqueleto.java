@@ -20,8 +20,8 @@ public class JefeEsqueleto extends Enemigo {
     private int waypointActual = 0;
     private boolean pausado = false;
 
-    public JefeEsqueleto(float x, float y, List<Vector2> waypoints) {
-        super(5000, new Texture("enemies/JefeEsqueleto.png"),
+    public JefeEsqueleto(float x, float y, List<Vector2> waypoints, int nivelActual) {
+        super(calcularVida(nivelActual, 5000), new Texture("enemies/JefeEsqueleto.png"),
             x, y, crearHitbox(x, y));
 
         this.waypoints = new ArrayList<>(waypoints);
@@ -60,6 +60,10 @@ public class JefeEsqueleto extends Enemigo {
                 }
             }
         }
+    }
+
+    private static int calcularVida(int nivel, int vida){
+        return (int) (vida * (nivel / 2));
     }
 
     private static Rectangle crearHitbox(float x, float y) {
@@ -106,7 +110,6 @@ public class JefeEsqueleto extends Enemigo {
 
             float distancia = (float) Math.hypot(deltaX, deltaY);
 
-            // Tolerancia para considerar que llegó al waypoint (evita bloqueos por decimales)
             if (distancia < 2f || movimientoRestante >= distancia) {
                 currentX = destino.x;
                 currentY = destino.y;

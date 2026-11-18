@@ -16,11 +16,7 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class MapManager {
 
@@ -99,6 +95,7 @@ public class MapManager {
         if (fila >= FILAS) {
             return true;
         }
+
         int sigFila = (col == COLUMNAS - 1) ? fila + 1 : fila;
         int sigCol = (col == COLUMNAS - 1) ? 0 : col + 1;
         List<FactoryRoom> candidatos = new ArrayList<>(List.of(opciones));
@@ -179,12 +176,26 @@ public class MapManager {
     }
 
     public void despawnearEnemigos() {
-        for (Enemigo enemigo : enemigos) {
+        List<Enemigo> nuevosEnemigos = new ArrayList<>();
+
+        Iterator<Enemigo> iterator = enemigos.iterator();
+
+        while (iterator.hasNext()) {
+            Enemigo enemigo = iterator.next();
+
             if (enemigo.getEstado() == EstadosEnemigo.MUERTO) {
+
+                if (enemigo instanceof Spider && Aleatorio.generarAleatorio(1, 3) == 3) {
+                    nuevosEnemigos.add(new SpiderMini(enemigo.getX() + 4, enemigo.getY(), nivelActual));
+                    nuevosEnemigos.add(new SpiderMini(enemigo.getX() - 4, enemigo.getY(), nivelActual));
+                }
+
                 enemigo.dispose();
+                iterator.remove();
             }
         }
-        enemigos.removeIf(enemigo -> enemigo.getEstado() == EstadosEnemigo.MUERTO);
+
+        enemigos.addAll(nuevosEnemigos);
     }
 
     private void spawnearEnemigos() {
@@ -224,25 +235,33 @@ public class MapManager {
                                     float yGlobal = rectOriginal.y + offsetY;
 
                                     if (nivelActual % 3 == 0) {
-                                        Enemigo jefe = new JefeEsqueleto(xGlobal, yGlobal, waypoints);
+                                        Enemigo jefe = new JefeEsqueleto(xGlobal, yGlobal, waypoints, nivelActual);
                                         enemigos.add(jefe);
                                     } else {
-                                        if(Aleatorio.generarAleatorio(1, 2) == 2) {
+                                        int probabilidad = Aleatorio.generarAleatorio(1, 100);
+
+                                        if (probabilidad <= 85) {
                                             int num = Aleatorio.generarAleatorio(1, 100);
-                                            if(num < 15) {
-                                                Enemigo enemigo = new Bat(xGlobal, yGlobal);
+
+                                            if (num <= 15) {
+                                                Enemigo enemigo = new Bat(xGlobal, yGlobal, nivelActual);
                                                 enemigos.add(enemigo);
-                                            } else if(num < 100) {
-                                                Enemigo enemigo = new Spider(xGlobal, yGlobal);
-                                                enemigos.add(enemigo);
-                                            }
-                                        } else if(Aleatorio.generarAleatorio(1, 2) == 2){
-                                            Item item;
-                                            if(Aleatorio.generarAleatorio(1, 2) == 1){
-                                                item = new Corazon(xGlobal, yGlobal);
                                             } else {
-                                                item = new PowerUpDmg(xGlobal, yGlobal);
+                                                Enemigo enemigo = new Spider(xGlobal, yGlobal, nivelActual);
+                                                enemigos.add(enemigo);
                                             }
+                                        } else {
+                                            Item item;
+                                            int aleatorio = Aleatorio.generarAleatorio(1, 3);
+
+                                            if (aleatorio == 1) {
+                                                item = new Corazon(xGlobal, yGlobal);
+                                            } else if (aleatorio == 2) {
+                                                item = new PowerUpDmg(xGlobal, yGlobal);
+                                            } else {
+                                                item = new PowerUpVel(xGlobal, yGlobal);
+                                            }
+
                                             items.add(item);
                                         }
                                     }
@@ -309,3 +328,4 @@ public class MapManager {
         }
     }
 }
+

@@ -2,6 +2,7 @@ package com.asd.regnum.menu;
 
 import com.asd.regnum.GameScreen;
 import com.asd.regnum.Main;
+import com.asd.regnum.menu.configuracion.MenuConfiguracion;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -61,7 +62,8 @@ public class MainMenuScreen implements Screen {
         stage.addActor(table);
 
         TextButton playButton = new TextButton("Jugar", textButtonStyle);
-        TextButton rankingButton = new TextButton("Ranking", textButtonStyle); // <-- NUEVO BOTÓN
+        TextButton rankingButton = new TextButton("Ranking", textButtonStyle);
+        TextButton configButton = new TextButton("Configuracion", textButtonStyle);
         TextButton exitButton = new TextButton("Salir", textButtonStyle);
 
         playButton.addListener(new ClickListener() {
@@ -73,13 +75,21 @@ public class MainMenuScreen implements Screen {
                 }
             }
         });
-
-        // Evento para abrir la pantalla de Ranking
         rankingButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (!isTransitioning) {
                     game.setScreen(new MenuRanking(game));
+                    dispose();
+                }
+            }
+        });
+
+        configButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (!isTransitioning) {
+                    game.setScreen(new MenuConfiguracion(game));
                     dispose();
                 }
             }
@@ -95,7 +105,8 @@ public class MainMenuScreen implements Screen {
         });
 
         table.add(playButton).padBottom(15).row();
-        table.add(rankingButton).padBottom(15).row(); // <-- AÑADIDO A LA TABLA
+        table.add(rankingButton).padBottom(15).row();
+        table.add(configButton).padBottom(15).row();
         table.add(exitButton);
     }
 

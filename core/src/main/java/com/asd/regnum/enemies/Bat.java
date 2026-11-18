@@ -1,6 +1,6 @@
 package com.asd.regnum.enemies;
 
-import com.asd.regnum.enums.EstadosEnemigo;
+import com.asd.regnum.enums.*;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
@@ -14,8 +14,12 @@ public class Bat extends Enemigo {
     private float angulo;
     float velocidad = 120f;
 
-    public Bat(float x, float y) {
-        super(100, new Texture("enemies/bat.png"), x, y, getHitbox(x, y));
+    public Bat(float x, float y, int nivel) {
+        super(calcularVida(nivel, 100), new Texture("enemies/bat.png"), x, y, getHitbox(x, y));
+    }
+
+    private static int calcularVida(int nivel, int vida){
+        return (int) (vida * nivel);
     }
 
     private static Rectangle getHitbox(float x, float y) {
@@ -37,7 +41,7 @@ public class Bat extends Enemigo {
             float distanciaJugador = (float) Math.hypot(deltaY, deltaX);
             float anguloGrados = MathUtils.atan2(deltaY, deltaX) * MathUtils.radiansToDegrees;
 
-            if (distanciaJugador < 250) {
+            if (distanciaJugador < 200) {
                 this.setEstado(EstadosEnemigo.PERSIGUIENDO);
                 angulo = anguloGrados - 90;
                 float dirX = deltaX / distanciaJugador;

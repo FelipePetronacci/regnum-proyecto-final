@@ -15,9 +15,13 @@ public class Spider extends Enemigo {
     private float angulo;
     private float velocidad = 60f;
 
-    public Spider(float x, float y) {
-        super(150, new Texture("enemies/spider.png"), x, y, getHitbox(x, y));
+    public Spider(float x, float y, int nivel) {
+        super(calcularVida(nivel, 150), new Texture("enemies/spider.png"), x, y, getHitbox(x, y));
         this.angulo = 0;
+    }
+
+    private static int calcularVida(int nivel, int vida){
+        return (int) (vida * (nivel));
     }
 
     private static Rectangle getHitbox(float x, float y) {

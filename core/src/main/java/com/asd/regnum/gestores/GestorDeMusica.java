@@ -6,25 +6,35 @@ import com.badlogic.gdx.audio.Music;
 
 public class GestorDeMusica {
 
-    Music musicaActual;
+    private Music musicaActual;
 
-
-    public GestorDeMusica(){
-        this.musicaActual = Gdx.audio.newMusic(EnumMusica.DISTANT.getArchivo());
+    public GestorDeMusica() {
+        this.musicaActual = null;
     }
 
+    public void reproducirMusica(EnumMusica musica) {
 
-    public void reproducirMusica(EnumMusica musica){
-        if(!this.musicaActual.isPlaying()) {
-            this.musicaActual = Gdx.audio.newMusic(musica.getArchivo());
-            this.musicaActual.setVolume(0.01f);
-            this.musicaActual.setLooping(true);
-            musicaActual.play();
+        if (musicaActual != null && musicaActual.isPlaying()) {
+            return;
+        }
+
+        if (musicaActual != null) {
+            musicaActual.dispose();
+            musicaActual = null;
+        }
+
+        musicaActual = Gdx.audio.newMusic(musica.getArchivo());
+
+        musicaActual.setVolume(0.01f);
+        musicaActual.setLooping(true);
+        musicaActual.play();
+    }
+
+    public void dispose() {
+        if (musicaActual != null) {
+            musicaActual.stop();
+            musicaActual.dispose();
+            musicaActual = null;
         }
     }
-
-    public void dispose(){
-        this.musicaActual.dispose();
-    }
-
 }

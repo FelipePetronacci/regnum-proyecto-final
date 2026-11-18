@@ -46,6 +46,7 @@ public class GameScreen extends ScreenAdapter {
     private float tiempoAnimacion;
     private ShapeRenderer shapeRenderer;
     private float tiempoJuego;
+    private boolean pasandoNivel;
 
     private Mundo mundo;
 
@@ -72,7 +73,7 @@ public class GameScreen extends ScreenAdapter {
         generator2.dispose();
 
         tiempoJuego = 0f;
-
+        pasandoNivel = false;
         pausado = false;
         batch = new SpriteBatch();
         gestorDeMusica = new GestorDeMusica();
@@ -104,11 +105,16 @@ public class GameScreen extends ScreenAdapter {
 
 
         if (mundo.getTeleport() != null) {
-            if (mundo.getMapManager().getEnemigos().isEmpty() && chequearColisionJugadorTeleport(mundo.getJugador(), mundo.getTeleport()) && Gdx.input.isButtonJustPressed(Input.Keys.E)) {
-                reproduciendoTransicion = true;
-                tiempoAnimacion = 0f;
-                mundo.borrarTeleport();
-                mundo.reiniciarMapa();
+            if (mundo.getMapManager().getEnemigos().isEmpty() && chequearColisionJugadorTeleport(mundo.getJugador(), mundo.getTeleport())) {
+                pasandoNivel = true;
+                if(Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+                    reproduciendoTransicion = true;
+                    tiempoAnimacion = 0f;
+                    mundo.borrarTeleport();
+                    mundo.reiniciarMapa();
+                }
+            }else{
+                pasandoNivel = false;
             }
         }
 
@@ -181,6 +187,10 @@ public class GameScreen extends ScreenAdapter {
         }
 
         batch.begin();
+        if(pasandoNivel && mundo.getTeleport() != null) {
+            fuente.draw(batch, "Presione E...", mundo.getTeleport().getX()- 22, mundo.getTeleport().getY() + 40);
+        }
+
         mundo.dibujarTeleport(batch);
         mundo.dibujarParticulas(batch);
         mundo.getJugador().dibujar(batch);
@@ -245,11 +255,32 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void dispose() {
-        batch.dispose();
-        fuente.dispose();
-        gestorDeMusica.dispose();
-        gestorDeSonidos.dispose();
-        hud.dispose();
-        mundo.dispose();
+        if (batch != null) {
+            batch.dispose();
+        }
+        if (fuente != null) {
+            fuente.dispose();
+        }
+        if (fuente2 != null) {
+            fuente2.dispose();
+        }
+        if (textureFlecha != null) {
+            textureFlecha.dispose();
+        }
+        if (shapeRenderer != null) {
+            shapeRenderer.dispose();
+        }
+        if (gestorDeMusica != null) {
+            gestorDeMusica.dispose();
+        }
+        if (gestorDeSonidos != null) {
+            gestorDeSonidos.dispose();
+        }
+        if (hud != null) {
+            hud.dispose();
+        }
+        if (mundo != null) {
+            mundo.dispose();
+        }
     }
 }
